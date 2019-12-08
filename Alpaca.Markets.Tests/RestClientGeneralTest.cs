@@ -21,6 +21,35 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
+        public async void GetAccountConfigurationWorks()
+        {
+            var accountConfiguration = await _restClient.GetAccountConfigurationAsync();
+
+            Assert.NotNull(accountConfiguration);
+            Assert.False(accountConfiguration.IsNoShorting);
+        }
+
+        [Fact]
+        public async void PatchAccountConfigurationWorks()
+        {
+            var accountConfigurationOld = await _restClient.GetAccountConfigurationAsync();
+
+            Assert.NotNull(accountConfigurationOld);
+
+            accountConfigurationOld.TradeConfirmEmail =
+                accountConfigurationOld.TradeConfirmEmail == TradeConfirmEmail.All
+                    ? TradeConfirmEmail.None
+                    : TradeConfirmEmail.All;
+
+            var accountConfigurationNew = await _restClient.PatchAccountConfigurationAsync(accountConfigurationOld);
+
+            Assert.NotNull(accountConfigurationNew);
+            Assert.NotEqual(accountConfigurationNew, accountConfigurationOld);
+
+            Assert.Equal(accountConfigurationOld.TradeConfirmEmail, accountConfigurationNew.TradeConfirmEmail);
+        }
+
+        [Fact]
         public async void ListOrdersWorks()
         {
             var orders = await _restClient.ListOrdersAsync();
