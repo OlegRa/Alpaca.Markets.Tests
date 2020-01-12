@@ -13,52 +13,51 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void OrderPlaceCheckCancelWorks()
         {
-            using (var sockClient = ClientsFactory.GetSockClient())
+            using var sockClient = ClientsFactory.GetAlpacaStreamingClient();
+
+            sockClient.OnError += (ex) =>
             {
-                sockClient.OnError += (ex) =>
-                {
-                    Assert.Null(ex.Message);
-                };
+                Assert.Null(ex.Message);
+            };
 
-                await sockClient.ConnectAsync();
+            await sockClient.ConnectAsync();
 
-                var waitObject = new AutoResetEvent(false);
-                sockClient.OnTradeUpdate += (update) =>
-                {
-                    Assert.NotNull(update);
-                    Assert.NotNull(update.Order);
-                    Assert.Equal(SYMBOL, update.Order.Symbol);
-                    waitObject.Set();
-                };
+            var waitObject = new AutoResetEvent(false);
+            sockClient.OnTradeUpdate += (update) =>
+            {
+                Assert.NotNull(update);
+                Assert.NotNull(update.Order);
+                Assert.Equal(SYMBOL, update.Order.Symbol);
+                waitObject.Set();
+            };
 
-                var clientOrderId = Guid.NewGuid().ToString("N");
+            var clientOrderId = Guid.NewGuid().ToString("N");
 
-                var clock = await _restClient.GetClockAsync();
+            var clock = await _restClient.GetClockAsync();
 
-                var order = await _restClient.PostOrderAsync(
-                    SYMBOL, 1, OrderSide.Buy, OrderType.Market,
-                    clock.IsOpen ? TimeInForce.Day : TimeInForce.Opg,
-                    clientOrderId: clientOrderId);
+            var order = await _restClient.PostOrderAsync(
+                SYMBOL, 1, OrderSide.Buy, OrderType.Market,
+                clock.IsOpen ? TimeInForce.Day : TimeInForce.Opg,
+                clientOrderId: clientOrderId);
 
-                Assert.NotNull(order);
-                Assert.Equal(SYMBOL, order.Symbol);
-                Assert.Equal(clientOrderId, order.ClientOrderId);
+            Assert.NotNull(order);
+            Assert.Equal(SYMBOL, order.Symbol);
+            Assert.Equal(clientOrderId, order.ClientOrderId);
 
-                var orderById = await _restClient.GetOrderAsync(order.OrderId);
-                var orderByClientId = await _restClient.GetOrderAsync(clientOrderId);
+            var orderById = await _restClient.GetOrderAsync(order.OrderId);
+            var orderByClientId = await _restClient.GetOrderAsync(clientOrderId);
 
-                Assert.NotNull(orderById);
-                Assert.NotNull(orderByClientId);
+            Assert.NotNull(orderById);
+            Assert.NotNull(orderByClientId);
 
-                var result = await _restClient.DeleteOrderAsync(order.OrderId);
+            var result = await _restClient.DeleteOrderAsync(order.OrderId);
 
-                Assert.True(result);
+            Assert.True(result);
 
-                Assert.True(waitObject.WaitOne(
-                    TimeSpan.FromSeconds(10)));
+            Assert.True(waitObject.WaitOne(
+                TimeSpan.FromSeconds(10)));
 
-                await sockClient.DisconnectAsync();
-            }
+            await sockClient.DisconnectAsync();
         }
 
         public void Dispose()

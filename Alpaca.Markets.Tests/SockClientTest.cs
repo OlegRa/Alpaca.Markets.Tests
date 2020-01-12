@@ -9,27 +9,26 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ConnectWorks()
         {
-            using (var client = ClientsFactory.GetSockClient())
+            using var client = ClientsFactory.GetAlpacaStreamingClient();
+
+            client.OnError += (ex) =>
             {
-                client.OnError += (ex) =>
-                {
-                    Assert.Null(ex.Message);
-                };
+                Assert.Null(ex.Message);
+            };
 
-                await client.ConnectAsync();
+            await client.ConnectAsync();
 
-                var waitObject = new AutoResetEvent(false);
-                client.Connected += (status) =>
-                {
-                    Assert.Equal(AuthStatus.Authorized, status);
-                    waitObject.Set();
-                };
+            var waitObject = new AutoResetEvent(false);
+            client.Connected += (status) =>
+            {
+                Assert.Equal(AuthStatus.Authorized, status);
+                waitObject.Set();
+            };
 
-                Assert.True(waitObject.WaitOne(
-                    TimeSpan.FromSeconds(10)));
+            Assert.True(waitObject.WaitOne(
+                TimeSpan.FromSeconds(10)));
 
-                await client.DisconnectAsync();
-            }
+            await client.DisconnectAsync();
         }
     }
 }

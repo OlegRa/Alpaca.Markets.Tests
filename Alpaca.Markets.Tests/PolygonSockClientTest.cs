@@ -14,167 +14,143 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async Task TradesSubscriptionWorks()
         {
-            using (var client = ClientsFactory.GetPolygonSockClient())
+            using var client = ClientsFactory.GetPolygonStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var waitObject = new AutoResetEvent(false);
+
+            client.TradeReceived += (trade) =>
             {
-                await connectAndAuthenticate(client);
+                Assert.Equal(SYMBOL, trade.Symbol);
+                waitObject.Set();
+            };
 
-                var waitObject = new AutoResetEvent(false);
+            waitObject.Reset();
+            client.SubscribeTrade(SYMBOL);
 
-                client.TradeReceived += (trade) =>
-                {
-                    Assert.Equal(SYMBOL, trade.Symbol);
-                    waitObject.Set();
-                };
-
-                waitObject.Reset();
-                client.SubscribeTrade(SYMBOL);
-
-                if (_restClient.GetClockAsync().Result.IsOpen)
-                {
-                    Assert.True(waitObject.WaitOne(
-                        TimeSpan.FromSeconds(10)));
-                }
-
-                await client.DisconnectAsync();
+            if (_restClient.GetClockAsync().Result.IsOpen)
+            {
+                Assert.True(waitObject.WaitOne(
+                    TimeSpan.FromSeconds(10)));
             }
+
+            await client.DisconnectAsync();
         }
 
         [Fact]
         public async Task QuotesSubscriptionWorks()
         {
-            using (var client = ClientsFactory.GetPolygonSockClient())
+            using var client = ClientsFactory.GetPolygonStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var waitObject = new AutoResetEvent(false);
+            client.QuoteReceived += (quote) =>
             {
-                await connectAndAuthenticate(client);
+                Assert.Equal(SYMBOL, quote.Symbol);
+                waitObject.Set();
+            };
 
-                var waitObject = new AutoResetEvent(false);
-                client.QuoteReceived += (quote) =>
-                {
-                    Assert.Equal(SYMBOL, quote.Symbol);
-                    waitObject.Set();
-                };
+            client.SubscribeQuote(SYMBOL);
 
-                client.SubscribeQuote(SYMBOL);
-
-                if (_restClient.GetClockAsync().Result.IsOpen)
-                {
-                    Assert.True(waitObject.WaitOne(
-                        TimeSpan.FromSeconds(10)));
-                }
-
-                await client.DisconnectAsync();
+            if (_restClient.GetClockAsync().Result.IsOpen)
+            {
+                Assert.True(waitObject.WaitOne(
+                    TimeSpan.FromSeconds(10)));
             }
+
+            await client.DisconnectAsync();
         }
 
         [Fact]
         public async Task SecondAggSubscriptionWorks()
         {
-            using (var client = ClientsFactory.GetPolygonSockClient())
+            using var client = ClientsFactory.GetPolygonStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var waitObject = new AutoResetEvent(false);
+            client.SecondAggReceived += (agg) =>
             {
-                await connectAndAuthenticate(client);
+                Assert.Equal(SYMBOL, agg.Symbol);
+                waitObject.Set();
+            };
 
-                var waitObject = new AutoResetEvent(false);
-                client.SecondAggReceived += (agg) =>
-                {
-                    Assert.Equal(SYMBOL, agg.Symbol);
-                    waitObject.Set();
-                };
+            client.SubscribeSecondAgg(SYMBOL);
 
-                client.SubscribeSecondAgg(SYMBOL);
-
-                if (_restClient.GetClockAsync().Result.IsOpen)
-                {
-                    Assert.True(waitObject.WaitOne(
-                        TimeSpan.FromSeconds(10)));
-                }
-
-                await client.DisconnectAsync();
+            if (_restClient.GetClockAsync().Result.IsOpen)
+            {
+                Assert.True(waitObject.WaitOne(
+                    TimeSpan.FromSeconds(10)));
             }
+
+            await client.DisconnectAsync();
         }
 
         [Fact(Skip="Too long running")]
         public async Task MinuteAggSubscriptionWorks()
         {
-            using (var client = ClientsFactory.GetPolygonSockClient())
+            using var client = ClientsFactory.GetPolygonStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var waitObject = new AutoResetEvent(false);
+            client.MinuteAggReceived += (agg) =>
             {
-                await connectAndAuthenticate(client);
+                Assert.Equal(SYMBOL, agg.Symbol);
+                waitObject.Set();
+            };
 
-                var waitObject = new AutoResetEvent(false);
-                client.MinuteAggReceived += (agg) =>
-                {
-                    Assert.Equal(SYMBOL, agg.Symbol);
-                    waitObject.Set();
-                };
+            client.SubscribeMinuteAgg(SYMBOL);
 
-                client.SubscribeMinuteAgg(SYMBOL);
-
-                if (_restClient.GetClockAsync().Result.IsOpen)
-                {
-                    Assert.True(waitObject.WaitOne(
-                        TimeSpan.FromSeconds(120)));
-                }
-
-                await client.DisconnectAsync();
+            if (_restClient.GetClockAsync().Result.IsOpen)
+            {
+                Assert.True(waitObject.WaitOne(
+                    TimeSpan.FromSeconds(120)));
             }
+
+            await client.DisconnectAsync();
         }
 
         [Fact]
         public async Task SeveralSubscriptionWorks()
         {
-            using (var client = ClientsFactory.GetPolygonSockClient())
+            using var client = ClientsFactory.GetPolygonStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var waitObjects = new []
             {
-                await connectAndAuthenticate(client);
-
-                var waitObjects = new []
-                {
-                    new AutoResetEvent(false),
-                    new AutoResetEvent(false)
-                };
-
-                client.TradeReceived += (trade) =>
-                {
-                    Assert.Equal(SYMBOL, trade.Symbol);
-                    waitObjects[0].Set();
-                };
-
-                client.QuoteReceived += (quote) =>
-                {
-                    Assert.Equal(SYMBOL, quote.Symbol);
-                    waitObjects[1].Set();
-                };
-
-                client.SubscribeTrade(SYMBOL);
-                client.SubscribeQuote(SYMBOL);
-
-                if (_restClient.GetClockAsync().Result.IsOpen)
-                {
-                    // ReSharper disable once CoVariantArrayConversion
-                    Assert.True(WaitHandle.WaitAll(
-                        waitObjects, TimeSpan.FromSeconds(10)));
-                }
-
-                await client.DisconnectAsync();
-            }
-        }
-
-        public void Dispose()
-        {
-            _restClient?.Dispose();
-        }
-
-        private static async Task connectAndAuthenticate(
-            PolygonSockClient client)
-        {
-            var waitObject = new AutoResetEvent(false);
-
-            client.Connected += (status) =>
-            {
-                Assert.Equal(AuthStatus.Authorized, status);
-                waitObject.Set();
+                new AutoResetEvent(false),
+                new AutoResetEvent(false)
             };
 
-            await client.ConnectAsync();
-            Assert.True(waitObject.WaitOne(
-                TimeSpan.FromSeconds(10)));
+            client.TradeReceived += (trade) =>
+            {
+                Assert.Equal(SYMBOL, trade.Symbol);
+                waitObjects[0].Set();
+            };
+
+            client.QuoteReceived += (quote) =>
+            {
+                Assert.Equal(SYMBOL, quote.Symbol);
+                waitObjects[1].Set();
+            };
+
+            client.SubscribeTrade(SYMBOL);
+            client.SubscribeQuote(SYMBOL);
+
+            if (_restClient.GetClockAsync().Result.IsOpen)
+            {
+                // ReSharper disable once CoVariantArrayConversion
+                Assert.True(WaitHandle.WaitAll(
+                    waitObjects, TimeSpan.FromSeconds(10)));
+            }
+
+            await client.DisconnectAsync();
         }
+
+        public void Dispose() => _restClient?.Dispose();
     }
 }
