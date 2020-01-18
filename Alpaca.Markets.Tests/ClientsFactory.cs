@@ -6,33 +6,23 @@ namespace Alpaca.Markets.Tests
     {
         private const String KEY_ID = "AKEW7ZBQUSNUHOJNQ5MS";
 
+        private const String POLYGON_KEY_ID = KEY_ID + "-staging";
+
         private const String SECRET_KEY = "Yr2Tms89rQ6foRLNu4pz3w/yXOrxQGDmXctU1BCn";
 
-        public static RestClient GetRestClient() =>
-            new RestClient(
-                new RestfulApiClientConfiguration
-                {
-                    KeyId = KEY_ID,
-                    SecurityId = new SecretKey(SECRET_KEY),
-                    DataApiUrl = Environments.Staging.AlpacaDataApi,
-                    TradingApiUrl = Environments.Staging.AlpacaTradingApi
-                });
+        public static AlpacaDataClient GetAlpacaDataClient() =>
+            Staging.Environment.GetAlpacaDataClient(KEY_ID);
+
+        public static AlpacaTradingClient GetAlpacaTradingClient() =>
+            Staging.Environment.GetAlpacaTradingClient(KEY_ID, new SecretKey(SECRET_KEY));
+
+        public static PolygonDataClient GetPolygonDataClient() =>
+            Staging.Environment.GetPolygonDataClient(POLYGON_KEY_ID);
 
         public static AlpacaStreamingClient GetAlpacaStreamingClient() =>
-            new AlpacaStreamingClient(
-                new AlpacaStreamingClientConfiguration()
-                {
-                    KeyId = KEY_ID,
-                    SecretKey = SECRET_KEY,
-                    ApiEndpoint = Environments.Staging.AlpacaStreamingApi
-                });
+            Staging.Environment.GetAlpacaStreamingClient(KEY_ID, SECRET_KEY);
 
         public static PolygonStreamingClient GetPolygonStreamingClient() =>
-            new PolygonStreamingClient(
-                new PolygonStreamingClientConfiguration()
-                {
-                    KeyId = KEY_ID,
-                    ApiEndpoint = Environments.Staging.PolygonStreamingApi
-                });
+            Staging.Environment.GetPolygonStreamingClient(POLYGON_KEY_ID);
     }
 }

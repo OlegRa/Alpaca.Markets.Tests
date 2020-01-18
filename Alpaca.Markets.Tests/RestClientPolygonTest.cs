@@ -9,12 +9,14 @@ namespace Alpaca.Markets.Tests
     {
         private const String SYMBOL = "AAPL";
 
-        private readonly RestClient _restClient = ClientsFactory.GetRestClient();
+        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+
+        private readonly PolygonDataClient _polygonDataClient = ClientsFactory.GetPolygonDataClient();
 
         [Fact]
         public async void ListExchangesWorks()
         {
-            var exchanges = await _restClient.ListExchangesAsync();
+            var exchanges = await _polygonDataClient.ListExchangesAsync();
 
             Assert.NotNull(exchanges);
             Assert.NotEmpty(exchanges);
@@ -23,7 +25,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetSymbolTypeMapWorks()
         {
-            var symbolTypeMap = await _restClient.GetSymbolTypeMapAsync();
+            var symbolTypeMap = await _polygonDataClient.GetSymbolTypeMapAsync();
 
             Assert.NotNull(symbolTypeMap);
             Assert.NotEmpty(symbolTypeMap);
@@ -32,7 +34,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListHistoricalTradesWorks()
         {
-            var historicalItems = await _restClient
+            var historicalItems = await _polygonDataClient
                 .ListHistoricalTradesAsync(
                     SYMBOL, await getLastTradingDay());
 
@@ -45,7 +47,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListHistoricalQuotesWorks()
         {
-            var historicalItems = await _restClient
+            var historicalItems = await _polygonDataClient
                 .ListHistoricalQuotesAsync(
                     SYMBOL, await getLastTradingDay());
 
@@ -61,7 +63,7 @@ namespace Alpaca.Markets.Tests
             var dateInto = await getLastTradingDay();
             var dateFrom = dateInto.AddHours(-20);
 
-            var historicalItems = await _restClient
+            var historicalItems = await _polygonDataClient
                 .ListMinuteAggregatesAsync(SYMBOL, 1, dateFrom, dateInto);
 
             Assert.NotNull(historicalItems);
@@ -73,7 +75,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetLastTradeWorks()
         {
-            var lastTrade = await _restClient
+            var lastTrade = await _polygonDataClient
                 .GetLastTradeAsync(SYMBOL);
 
             Assert.NotNull(lastTrade);
@@ -83,7 +85,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetLastQuoteWorks()
         {
-            var lastQuote = await _restClient
+            var lastQuote = await _polygonDataClient
                 .GetLastQuoteAsync(SYMBOL);
 
             Assert.NotNull(lastQuote);
@@ -96,7 +98,7 @@ namespace Alpaca.Markets.Tests
         public async void GetConditionMapForQuotesWorks(
             TickType tickType)
         {
-            var conditionMap = await _restClient
+            var conditionMap = await _polygonDataClient
                 .GetConditionMapAsync(tickType);
 
             Assert.NotNull(conditionMap);
@@ -105,7 +107,7 @@ namespace Alpaca.Markets.Tests
 
         private async Task<DateTime> getLastTradingDay()
         {
-            var calendars = await _restClient
+            var calendars = await _alpacaTradingClient
                 .ListCalendarAsync(
                     DateTime.UtcNow.Date.AddDays(-14),
                     DateTime.UtcNow.Date.AddDays(-1));
@@ -117,7 +119,7 @@ namespace Alpaca.Markets.Tests
 
         public void Dispose()
         {
-            _restClient?.Dispose();
+            _polygonDataClient?.Dispose();
         }
     }
 }

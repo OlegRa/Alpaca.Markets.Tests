@@ -4,9 +4,9 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    public sealed class WatchListTest
+    public sealed class WatchListTest : IDisposable
     {
-        private readonly RestClient _restClient = ClientsFactory.GetRestClient();
+        private readonly AlpacaTradingClient _restClient = ClientsFactory.GetAlpacaTradingClient();
 
         [Fact]
         public async void AllOperationsByIdWork()
@@ -106,5 +106,7 @@ namespace Alpaca.Markets.Tests
 
             Assert.True(await _restClient.DeleteWatchListByNameAsync(newWatchList.Name));
         }
+
+        public void Dispose() => _restClient?.Dispose();
     }
 }

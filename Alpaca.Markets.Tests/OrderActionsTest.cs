@@ -8,7 +8,7 @@ namespace Alpaca.Markets.Tests
     {
         private const String SYMBOL = "AAPL";
 
-        private readonly RestClient _restClient = ClientsFactory.GetRestClient();
+        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
 
         [Fact]
         public async void OrderPlaceCheckCancelWorks()
@@ -33,9 +33,9 @@ namespace Alpaca.Markets.Tests
 
             var clientOrderId = Guid.NewGuid().ToString("N");
 
-            var clock = await _restClient.GetClockAsync();
+            var clock = await _alpacaTradingClient.GetClockAsync();
 
-            var order = await _restClient.PostOrderAsync(
+            var order = await _alpacaTradingClient.PostOrderAsync(
                 SYMBOL, 1, OrderSide.Buy, OrderType.Market,
                 clock.IsOpen ? TimeInForce.Day : TimeInForce.Opg,
                 clientOrderId: clientOrderId);
@@ -44,13 +44,13 @@ namespace Alpaca.Markets.Tests
             Assert.Equal(SYMBOL, order.Symbol);
             Assert.Equal(clientOrderId, order.ClientOrderId);
 
-            var orderById = await _restClient.GetOrderAsync(order.OrderId);
-            var orderByClientId = await _restClient.GetOrderAsync(clientOrderId);
+            var orderById = await _alpacaTradingClient.GetOrderAsync(order.OrderId);
+            var orderByClientId = await _alpacaTradingClient.GetOrderAsync(clientOrderId);
 
             Assert.NotNull(orderById);
             Assert.NotNull(orderByClientId);
 
-            var result = await _restClient.DeleteOrderAsync(order.OrderId);
+            var result = await _alpacaTradingClient.DeleteOrderAsync(order.OrderId);
 
             Assert.True(result);
 
@@ -62,7 +62,7 @@ namespace Alpaca.Markets.Tests
 
         public void Dispose()
         {
-            _restClient?.Dispose();
+            _alpacaTradingClient?.Dispose();
         }
     }
 }

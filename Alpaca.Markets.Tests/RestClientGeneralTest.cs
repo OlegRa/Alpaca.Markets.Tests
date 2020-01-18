@@ -9,12 +9,14 @@ namespace Alpaca.Markets.Tests
     {
         private const String SYMBOL = "AAPL";
 
-        private readonly RestClient _restClient = ClientsFactory.GetRestClient();
+        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+
+        private readonly AlpacaDataClient _alpacaDataClient = ClientsFactory.GetAlpacaDataClient();
 
         [Fact]
         public async void GetAccountWorks()
         {
-            var account = await _restClient.GetAccountAsync();
+            var account = await _alpacaTradingClient.GetAccountAsync();
 
             Assert.NotNull(account);
             Assert.Equal("USD", account.Currency);
@@ -23,7 +25,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetAccountConfigurationWorks()
         {
-            var accountConfiguration = await _restClient.GetAccountConfigurationAsync();
+            var accountConfiguration = await _alpacaTradingClient.GetAccountConfigurationAsync();
 
             Assert.NotNull(accountConfiguration);
             Assert.False(accountConfiguration.IsNoShorting);
@@ -32,7 +34,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void PatchAccountConfigurationWorks()
         {
-            var accountConfigurationOld = await _restClient.GetAccountConfigurationAsync();
+            var accountConfigurationOld = await _alpacaTradingClient.GetAccountConfigurationAsync();
 
             Assert.NotNull(accountConfigurationOld);
 
@@ -41,7 +43,7 @@ namespace Alpaca.Markets.Tests
                     ? TradeConfirmEmail.None
                     : TradeConfirmEmail.All;
 
-            var accountConfigurationNew = await _restClient.PatchAccountConfigurationAsync(accountConfigurationOld);
+            var accountConfigurationNew = await _alpacaTradingClient.PatchAccountConfigurationAsync(accountConfigurationOld);
 
             Assert.NotNull(accountConfigurationNew);
             Assert.NotEqual(accountConfigurationNew, accountConfigurationOld);
@@ -52,7 +54,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListOrdersWorks()
         {
-            var orders = await _restClient.ListOrdersAsync();
+            var orders = await _alpacaTradingClient.ListOrdersAsync();
 
             Assert.NotNull(orders);
             // Assert.NotEmpty(orders);
@@ -61,7 +63,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetOrderWorks()
         {
-            var orders = await _restClient.ListOrdersAsync(OrderStatusFilter.All);
+            var orders = await _alpacaTradingClient.ListOrdersAsync(OrderStatusFilter.All);
 
             Assert.NotNull(orders);
 
@@ -69,8 +71,8 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(ordersList);
             var first = ordersList.First();
 
-            var orderById = await _restClient.GetOrderAsync(first.OrderId);
-            var orderByClientId = await _restClient.GetOrderAsync(first.ClientOrderId);
+            var orderById = await _alpacaTradingClient.GetOrderAsync(first.OrderId);
+            var orderByClientId = await _alpacaTradingClient.GetOrderAsync(first.ClientOrderId);
 
             Assert.NotNull(orderById);
             Assert.NotNull(orderByClientId);
@@ -82,7 +84,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListPositionsWorks()
         {
-            var positions = await _restClient.ListPositionsAsync();
+            var positions = await _alpacaTradingClient.ListPositionsAsync();
 
             Assert.NotNull(positions);
             Assert.NotEmpty(positions);
@@ -91,7 +93,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetPositionWorks()
         {
-            var position = await _restClient.GetPositionAsync(SYMBOL);
+            var position = await _alpacaTradingClient.GetPositionAsync(SYMBOL);
 
             Assert.NotNull(position);
             Assert.Equal(SYMBOL, position.Symbol);
@@ -100,7 +102,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListAssetsWorks()
         {
-            var assets = await _restClient.ListAssetsAsync();
+            var assets = await _alpacaTradingClient.ListAssetsAsync();
 
             Assert.NotNull(assets);
             Assert.NotEmpty(assets);
@@ -109,7 +111,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetAssetWorks()
         {
-            var asset = await _restClient.GetAssetAsync(SYMBOL);
+            var asset = await _alpacaTradingClient.GetAssetAsync(SYMBOL);
 
             Assert.NotNull(asset);
             Assert.Equal(SYMBOL, asset.Symbol);
@@ -118,7 +120,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetClockWorks()
         {
-            var clock = await _restClient.GetClockAsync();
+            var clock = await _alpacaTradingClient.GetClockAsync();
 
             Assert.NotNull(clock);
             Assert.True(clock.NextOpen > clock.Timestamp);
@@ -128,7 +130,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListCalendarWorks()
         {
-            var calendars = await _restClient.ListCalendarAsync(
+            var calendars = await _alpacaTradingClient.ListCalendarAsync(
                 DateTime.Today.AddDays(-14),
                 DateTime.Today.AddDays(14));
 
@@ -149,7 +151,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetBarSetWorks()
         {
-            var barSet = await _restClient.GetBarSetAsync(
+            var barSet = await _alpacaDataClient.GetBarSetAsync(
                 new [] { SYMBOL }, TimeFrame.Day);
 
             Assert.NotNull(barSet);
@@ -168,7 +170,7 @@ namespace Alpaca.Markets.Tests
             var dateInto = await getLastTradingDay();
             var dateFrom = dateInto.AddHours(-20);
 
-            var barSet = await _restClient.GetBarSetAsync(
+            var barSet = await _alpacaDataClient.GetBarSetAsync(
                 new[] { SYMBOL }, TimeFrame.FifteenMinutes,
                 timeFrom: dateFrom, timeInto: dateInto);
 
@@ -193,7 +195,7 @@ namespace Alpaca.Markets.Tests
         {
             const Int32 limit = 10;
             var symbols = new[] { SYMBOL, "MSFT" };
-            var barSet = await _restClient.GetBarSetAsync(
+            var barSet = await _alpacaDataClient.GetBarSetAsync(
                 symbols, TimeFrame.Minute, limit: limit);
 
             Assert.NotNull(barSet);
@@ -214,7 +216,7 @@ namespace Alpaca.Markets.Tests
 
         private async Task<DateTime> getLastTradingDay()
         {
-            var calendars = await _restClient
+            var calendars = await _alpacaTradingClient
                 .ListCalendarAsync(
                     DateTime.UtcNow.Date.AddDays(-14),
                     DateTime.UtcNow.Date.AddDays(-1));
@@ -226,7 +228,7 @@ namespace Alpaca.Markets.Tests
 
         public void Dispose()
         {
-            _restClient?.Dispose();
+            _alpacaTradingClient?.Dispose();
         }
     }
 }

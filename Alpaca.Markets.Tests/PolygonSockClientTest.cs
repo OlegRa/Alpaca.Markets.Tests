@@ -9,7 +9,7 @@ namespace Alpaca.Markets.Tests
     {
         private const String SYMBOL = "AAPL";
 
-        private readonly RestClient _restClient = ClientsFactory.GetRestClient();
+        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
 
         [Fact]
         public async Task TradesSubscriptionWorks()
@@ -29,7 +29,7 @@ namespace Alpaca.Markets.Tests
             waitObject.Reset();
             client.SubscribeTrade(SYMBOL);
 
-            if (_restClient.GetClockAsync().Result.IsOpen)
+            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(10)));
@@ -54,7 +54,7 @@ namespace Alpaca.Markets.Tests
 
             client.SubscribeQuote(SYMBOL);
 
-            if (_restClient.GetClockAsync().Result.IsOpen)
+            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(10)));
@@ -79,7 +79,7 @@ namespace Alpaca.Markets.Tests
 
             client.SubscribeSecondAgg(SYMBOL);
 
-            if (_restClient.GetClockAsync().Result.IsOpen)
+            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(10)));
@@ -104,7 +104,7 @@ namespace Alpaca.Markets.Tests
 
             client.SubscribeMinuteAgg(SYMBOL);
 
-            if (_restClient.GetClockAsync().Result.IsOpen)
+            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(120)));
@@ -141,7 +141,7 @@ namespace Alpaca.Markets.Tests
             client.SubscribeTrade(SYMBOL);
             client.SubscribeQuote(SYMBOL);
 
-            if (_restClient.GetClockAsync().Result.IsOpen)
+            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
             {
                 // ReSharper disable once CoVariantArrayConversion
                 Assert.True(WaitHandle.WaitAll(
@@ -151,6 +151,6 @@ namespace Alpaca.Markets.Tests
             await client.DisconnectAsync();
         }
 
-        public void Dispose() => _restClient?.Dispose();
+        public void Dispose() => _alpacaTradingClient?.Dispose();
     }
 }
