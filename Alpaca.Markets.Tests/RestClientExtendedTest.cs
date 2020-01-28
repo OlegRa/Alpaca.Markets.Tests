@@ -8,12 +8,14 @@ namespace Alpaca.Markets.Tests
     {
         private const String SYMBOL = "AAPL";
 
-        private readonly RestClient _restClient = ClientsFactory.GetRestClient();
+        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+
+        private readonly PolygonDataClient _polygonDataClient = ClientsFactory.GetPolygonDataClient();
 
         [Fact]
         public async void ListHistoricalQuotesReturnsEmptyListForSunday()
         {
-            var historicalItems = await _restClient
+            var historicalItems = await _polygonDataClient
                 .ListHistoricalQuotesAsync(SYMBOL, new DateTime(2018, 8, 5));
 
             Assert.NotNull(historicalItems);
@@ -28,7 +30,7 @@ namespace Alpaca.Markets.Tests
             var dateInto = DateTime.Today;
             var dateFrom = dateInto.AddDays(-7);
 
-            var historicalItems = await _restClient
+            var historicalItems = await _polygonDataClient
                 .ListDayAggregatesAsync(SYMBOL, 1, dateFrom, dateInto);
 
             Assert.NotNull(historicalItems);
@@ -43,7 +45,7 @@ namespace Alpaca.Markets.Tests
             var dateInto = DateTime.Today;
             var dateFrom = dateInto.AddDays(-7);
 
-            var historicalItems = await _restClient
+            var historicalItems = await _polygonDataClient
                 .ListMinuteAggregatesAsync(SYMBOL, 1, dateFrom, dateInto, true);
 
             Assert.NotNull(historicalItems);
@@ -58,7 +60,7 @@ namespace Alpaca.Markets.Tests
             var tasks = new Task[300];
             for (var i = 0; i < tasks.Length; ++i)
             {
-                tasks[i] = _restClient.GetClockAsync();
+                tasks[i] = _alpacaTradingClient.GetClockAsync();
             }
 
             Task.WaitAll(tasks);
@@ -68,7 +70,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListOrdersForDatesWorks()
         {
-            var orders = await _restClient.ListOrdersAsync(
+            var orders = await _alpacaTradingClient.ListOrdersAsync(
                 untilDateTimeExclusive: DateTime.Today.AddDays(-5));
 
             Assert.NotNull(orders);
@@ -77,7 +79,7 @@ namespace Alpaca.Markets.Tests
 
         public void Dispose()
         {
-            _restClient?.Dispose();
+            _polygonDataClient?.Dispose();
         }
     }
 }

@@ -1,10 +1,4 @@
 ﻿using System;
-#if NETSTANDARD2_0
-
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-
-#endif
 
 namespace Alpaca.Markets.Tests
 {
@@ -12,50 +6,23 @@ namespace Alpaca.Markets.Tests
     {
         private const String KEY_ID = "AKEW7ZBQUSNUHOJNQ5MS";
 
+        private const String POLYGON_KEY_ID = KEY_ID + "-staging";
+
         private const String SECRET_KEY = "Yr2Tms89rQ6foRLNu4pz3w/yXOrxQGDmXctU1BCn";
 
-        private const String ALPACA_REST_API = "https://staging-api.tradetalk.us";
+        public static AlpacaDataClient GetAlpacaDataClient() =>
+            Staging.Environment.GetAlpacaDataClient(KEY_ID);
 
-#if NETSTANDARD2_0
+        public static AlpacaTradingClient GetAlpacaTradingClient() =>
+            Staging.Environment.GetAlpacaTradingClient(KEY_ID, new SecretKey(SECRET_KEY));
 
-        private static readonly IConfigurationRoot _configuration;
+        public static PolygonDataClient GetPolygonDataClient() =>
+            Staging.Environment.GetPolygonDataClient(POLYGON_KEY_ID);
 
-        static ClientsFactory()
-        {
-            var data = new Dictionary<String, String>
-            {
-                { "staging", "true" },
-                { "keyId", KEY_ID },
-                { "secretKey",  SECRET_KEY },
-                { "alpacaRestApi", ALPACA_REST_API },
-            };
+        public static AlpacaStreamingClient GetAlpacaStreamingClient() =>
+            Staging.Environment.GetAlpacaStreamingClient(KEY_ID, SECRET_KEY);
 
-            var builder = new ConfigurationBuilder();
-            builder.AddInMemoryCollection(data);
-
-            _configuration = builder.Build();
-        }
-
-        public static RestClient GetRestClient() =>
-            new RestClient(_configuration);
-
-        public static SockClient GetSockClient() =>
-            new SockClient(_configuration);
-
-        public static PolygonSockClient GetPolygonSockClient() =>
-            new PolygonSockClient(_configuration);
-
-#else
-
-        public static RestClient GetRestClient() =>
-            new RestClient(KEY_ID, SECRET_KEY, ALPACA_REST_API, isStagingEnvironment: true);
-
-        public static SockClient GetSockClient() =>
-            new SockClient(KEY_ID, SECRET_KEY, ALPACA_REST_API);
-
-        public static PolygonSockClient GetPolygonSockClient() =>
-            new PolygonSockClient(KEY_ID, isStagingEnvironment: true);
-
-#endif
+        public static PolygonStreamingClient GetPolygonStreamingClient() =>
+            Staging.Environment.GetPolygonStreamingClient(POLYGON_KEY_ID);
     }
 }
