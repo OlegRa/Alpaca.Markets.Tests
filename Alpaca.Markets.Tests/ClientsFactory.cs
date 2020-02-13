@@ -11,7 +11,7 @@ namespace Alpaca.Markets.Tests
         private const String SECRET_KEY = "Yr2Tms89rQ6foRLNu4pz3w/yXOrxQGDmXctU1BCn";
 
         public static AlpacaDataClient GetAlpacaDataClient() =>
-            Staging.Environment.GetAlpacaDataClient(KEY_ID);
+            Staging.Environment.GetAlpacaDataClient(KEY_ID, new SecretKey(SECRET_KEY));
 
         public static AlpacaTradingClient GetAlpacaTradingClient() =>
             Staging.Environment.GetAlpacaTradingClient(KEY_ID, new SecretKey(SECRET_KEY));
