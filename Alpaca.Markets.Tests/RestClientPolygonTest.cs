@@ -36,7 +36,8 @@ namespace Alpaca.Markets.Tests
         {
             var historicalItems = await _polygonDataClient
                 .ListHistoricalTradesAsync(
-                    SYMBOL, await getLastTradingDay());
+                    new HistoricalRequest(
+                        SYMBOL, await getLastTradingDay()));
 
             Assert.NotNull(historicalItems);
 
@@ -49,7 +50,8 @@ namespace Alpaca.Markets.Tests
         {
             var historicalItems = await _polygonDataClient
                 .ListHistoricalQuotesAsync(
-                    SYMBOL, await getLastTradingDay());
+                    new HistoricalRequest(
+                        SYMBOL, await getLastTradingDay()));
 
             Assert.NotNull(historicalItems);
 
@@ -64,7 +66,10 @@ namespace Alpaca.Markets.Tests
             var dateFrom = dateInto.AddHours(-20);
 
             var historicalItems = await _polygonDataClient
-                .ListMinuteAggregatesAsync(SYMBOL, 1, dateFrom, dateInto);
+                .ListAggregatesAsync(
+                    new AggregatesRequest(
+                        SYMBOL, new AggregationPeriod(1, AggregationPeriodUnit.Minute))
+                        .SetInclusiveTimeInterval(dateFrom, dateInto));
 
             Assert.NotNull(historicalItems);
 

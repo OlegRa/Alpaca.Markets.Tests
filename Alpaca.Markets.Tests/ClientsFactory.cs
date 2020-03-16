@@ -11,16 +11,16 @@ namespace Alpaca.Markets.Tests
         private const String SECRET_KEY = "Yr2Tms89rQ6foRLNu4pz3w/yXOrxQGDmXctU1BCn";
 
         public static AlpacaDataClient GetAlpacaDataClient() =>
-            Staging.Environment.GetAlpacaDataClient(KEY_ID, new SecretKey(SECRET_KEY));
+            Staging.Environment.GetAlpacaDataClient(new SecretKey(KEY_ID, SECRET_KEY));
 
         public static AlpacaTradingClient GetAlpacaTradingClient() =>
-            Staging.Environment.GetAlpacaTradingClient(KEY_ID, new SecretKey(SECRET_KEY));
+            Staging.Environment.GetAlpacaTradingClient(new SecretKey(KEY_ID, SECRET_KEY));
 
         public static PolygonDataClient GetPolygonDataClient() =>
             Staging.Environment.GetPolygonDataClient(POLYGON_KEY_ID);
 
         public static AlpacaStreamingClient GetAlpacaStreamingClient() =>
-            Staging.Environment.GetAlpacaStreamingClient(KEY_ID, SECRET_KEY);
+            Staging.Environment.GetAlpacaStreamingClient(new SecretKey(KEY_ID, SECRET_KEY));
 
         public static PolygonStreamingClient GetPolygonStreamingClient() =>
             Staging.Environment.GetPolygonStreamingClient(POLYGON_KEY_ID);

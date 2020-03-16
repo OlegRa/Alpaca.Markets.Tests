@@ -152,7 +152,7 @@ namespace Alpaca.Markets.Tests
         public async void GetBarSetWorks()
         {
             var barSet = await _alpacaDataClient.GetBarSetAsync(
-                new [] { SYMBOL }, TimeFrame.Day);
+                new BarSetRequest(SYMBOL, TimeFrame.Day));
 
             Assert.NotNull(barSet);
             Assert.Equal(1, barSet.Count);
@@ -171,8 +171,8 @@ namespace Alpaca.Markets.Tests
             var dateFrom = dateInto.AddHours(-20);
 
             var barSet = await _alpacaDataClient.GetBarSetAsync(
-                new[] { SYMBOL }, TimeFrame.FifteenMinutes,
-                timeFrom: dateFrom, timeInto: dateInto);
+                new BarSetRequest(SYMBOL, TimeFrame.FifteenMinutes)
+                    .SetInclusiveTimeInterval(dateFrom, dateInto));
 
             Assert.NotNull(barSet);
             Assert.Equal(1, barSet.Count);
@@ -196,7 +196,10 @@ namespace Alpaca.Markets.Tests
             const Int32 limit = 10;
             var symbols = new[] { SYMBOL, "MSFT" };
             var barSet = await _alpacaDataClient.GetBarSetAsync(
-                symbols, TimeFrame.Minute, limit: limit);
+                new BarSetRequest(symbols, TimeFrame.Minute)
+                {
+                    Limit = limit
+                });
 
             Assert.NotNull(barSet);
             Assert.Equal(symbols.Length, barSet.Count);

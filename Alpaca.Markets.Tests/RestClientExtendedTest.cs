@@ -16,7 +16,8 @@ namespace Alpaca.Markets.Tests
         public async void ListHistoricalQuotesReturnsEmptyListForSunday()
         {
             var historicalItems = await _polygonDataClient
-                .ListHistoricalQuotesAsync(SYMBOL, new DateTime(2018, 8, 5));
+                .ListHistoricalQuotesAsync(new HistoricalRequest(
+                    SYMBOL, new DateTime(2018, 8, 5)));
 
             Assert.NotNull(historicalItems);
 
@@ -31,7 +32,9 @@ namespace Alpaca.Markets.Tests
             var dateFrom = dateInto.AddDays(-7);
 
             var historicalItems = await _polygonDataClient
-                .ListDayAggregatesAsync(SYMBOL, 1, dateFrom, dateInto);
+                .ListAggregatesAsync(new AggregatesRequest(
+                    SYMBOL, new AggregationPeriod(1, AggregationPeriodUnit.Day))
+                    .SetInclusiveTimeInterval(dateFrom, dateInto));
 
             Assert.NotNull(historicalItems);
 
@@ -46,7 +49,12 @@ namespace Alpaca.Markets.Tests
             var dateFrom = dateInto.AddDays(-7);
 
             var historicalItems = await _polygonDataClient
-                .ListMinuteAggregatesAsync(SYMBOL, 1, dateFrom, dateInto, true);
+                .ListAggregatesAsync(new AggregatesRequest(
+                    SYMBOL, new AggregationPeriod(1, AggregationPeriodUnit.Minute))
+                    {
+                        Unadjusted = true
+                    }
+                    .SetInclusiveTimeInterval(dateFrom, dateInto));
 
             Assert.NotNull(historicalItems);
 
