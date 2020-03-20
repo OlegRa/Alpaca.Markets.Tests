@@ -113,9 +113,10 @@ namespace Alpaca.Markets.Tests
         private async Task<DateTime> getLastTradingDay()
         {
             var calendars = await _alpacaTradingClient
-                .ListCalendarAsync(
-                    DateTime.UtcNow.Date.AddDays(-14),
-                    DateTime.UtcNow.Date.AddDays(-1));
+                .ListCalendarAsync(new CalendarRequest()
+                    .SetInclusiveTimeInterval(
+                        DateTime.UtcNow.Date.AddDays(-14),
+                        DateTime.UtcNow.Date.AddDays(-1)));
 
             Assert.NotNull(calendars);
 

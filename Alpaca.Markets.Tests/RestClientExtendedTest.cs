@@ -79,7 +79,8 @@ namespace Alpaca.Markets.Tests
         public async void ListOrdersForDatesWorks()
         {
             var orders = await _alpacaTradingClient.ListOrdersAsync(
-                untilDateTimeExclusive: DateTime.Today.AddDays(-5));
+                new ListOrdersRequest().SetExclusiveTimeInterval(
+                    null, DateTime.Today.AddDays(-5)));
 
             Assert.NotNull(orders);
             // Assert.NotEmpty(orders);

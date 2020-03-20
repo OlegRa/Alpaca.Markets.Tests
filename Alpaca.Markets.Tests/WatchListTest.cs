@@ -18,7 +18,7 @@ namespace Alpaca.Markets.Tests
             var newWatchListName = DateTime.UtcNow.ToString("O");
 
             var newWatchList = await _restClient.CreateWatchListAsync(
-                newWatchListName, new[] { "AAPL", "MSFT", "GOOG" });
+                new NewWatchListRequest(newWatchListName, new[] { "AAPL", "MSFT", "GOOG" }));
 
             Assert.NotNull(newWatchList);
             Assert.Equal(newWatchListName, newWatchList.Name);
@@ -34,7 +34,7 @@ namespace Alpaca.Markets.Tests
             Assert.Equal(newWatchList.Assets.Count, updatedWatchList.Assets.Count);
 
             updatedWatchList = await _restClient.AddAssetIntoWatchListByIdAsync(
-                newWatchList.WatchListId, "AMZN");
+                new ChangeWatchListRequest<Guid>(newWatchList.WatchListId, "AMZN"));
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(newWatchList.Assets.Count + 1, updatedWatchList.Assets.Count);
@@ -42,7 +42,7 @@ namespace Alpaca.Markets.Tests
                 asset => String.Equals(asset.Symbol, "AMZN", StringComparison.Ordinal));
 
             updatedWatchList = await _restClient.DeleteAssetFromWatchListByIdAsync(
-                newWatchList.WatchListId, "MSFT");
+                new ChangeWatchListRequest<Guid>(newWatchList.WatchListId, "MSFT"));
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(newWatchList.Assets.Count, updatedWatchList.Assets.Count);
@@ -51,7 +51,7 @@ namespace Alpaca.Markets.Tests
 
             var updatedWatchListName = newWatchListName + "_Updated";
             updatedWatchList = await _restClient.UpdateWatchListByIdAsync(
-                newWatchList.WatchListId, updatedWatchListName, new [] { "IBM" });
+                new UpdateWatchListRequest(newWatchList.WatchListId, updatedWatchListName, new [] { "IBM" }));
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(updatedWatchListName, updatedWatchList.Name);
@@ -72,7 +72,7 @@ namespace Alpaca.Markets.Tests
             var newWatchListName = DateTime.UtcNow.ToString("O");
 
             var newWatchList = await _restClient.CreateWatchListAsync(
-                newWatchListName, new[] { "AAPL", "MSFT", "GOOG" });
+                new NewWatchListRequest(newWatchListName, new[] { "AAPL", "MSFT", "GOOG" }));
 
             Assert.NotNull(newWatchList);
             Assert.Equal(newWatchListName, newWatchList.Name);
@@ -89,7 +89,7 @@ namespace Alpaca.Markets.Tests
 
 
             updatedWatchList = await _restClient.AddAssetIntoWatchListByNameAsync(
-                newWatchList.Name, "AMZN");
+                new ChangeWatchListRequest<String>(newWatchList.Name, "AMZN"));
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(newWatchList.Assets.Count + 1, updatedWatchList.Assets.Count);
@@ -97,7 +97,7 @@ namespace Alpaca.Markets.Tests
                 asset => String.Equals(asset.Symbol, "AMZN", StringComparison.Ordinal));
 
             updatedWatchList = await _restClient.DeleteAssetFromWatchListByNameAsync(
-                newWatchList.Name, "MSFT");
+                new ChangeWatchListRequest<String>(newWatchList.Name, "MSFT"));
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(newWatchList.Assets.Count, updatedWatchList.Assets.Count);

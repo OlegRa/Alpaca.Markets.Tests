@@ -36,9 +36,12 @@ namespace Alpaca.Markets.Tests
             var clock = await _alpacaTradingClient.GetClockAsync();
 
             var order = await _alpacaTradingClient.PostOrderAsync(
-                SYMBOL, 1, OrderSide.Buy, OrderType.Market,
-                clock.IsOpen ? TimeInForce.Day : TimeInForce.Opg,
-                clientOrderId: clientOrderId);
+                new NewOrderRequest(
+                    SYMBOL, 1, OrderSide.Buy, OrderType.Market,
+                    clock.IsOpen ? TimeInForce.Day : TimeInForce.Opg)
+                {
+                    ClientOrderId = clientOrderId
+                });
 
             Assert.NotNull(order);
             Assert.Equal(SYMBOL, order.Symbol);

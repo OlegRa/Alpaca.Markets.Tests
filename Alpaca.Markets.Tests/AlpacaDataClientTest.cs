@@ -11,7 +11,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetPortfolioHistoryAsyncWorks()
         {
-            var portfolioHistory = await _alpacaTradingClient.GetPortfolioHistoryAsync();
+            var portfolioHistory = await _alpacaTradingClient.GetPortfolioHistoryAsync(new PortfolioHistoryRequest());
 
             Assert.NotNull(portfolioHistory);
             Assert.NotNull(portfolioHistory.Items);

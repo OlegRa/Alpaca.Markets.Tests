@@ -54,7 +54,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListOrdersWorks()
         {
-            var orders = await _alpacaTradingClient.ListOrdersAsync();
+            var orders = await _alpacaTradingClient.ListOrdersAsync(new ListOrdersRequest());
 
             Assert.NotNull(orders);
             // Assert.NotEmpty(orders);
@@ -63,7 +63,8 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetOrderWorks()
         {
-            var orders = await _alpacaTradingClient.ListOrdersAsync(OrderStatusFilter.All);
+            var orders = await _alpacaTradingClient.ListOrdersAsync(
+                new ListOrdersRequest { OrderStatusFilter = OrderStatusFilter.All });
 
             Assert.NotNull(orders);
 
@@ -102,7 +103,8 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void ListAssetsWorks()
         {
-            var assets = await _alpacaTradingClient.ListAssetsAsync();
+            var assets = await _alpacaTradingClient.ListAssetsAsync(
+                new AssetsRequest());
 
             Assert.NotNull(assets);
             Assert.NotEmpty(assets);
@@ -131,8 +133,9 @@ namespace Alpaca.Markets.Tests
         public async void ListCalendarWorks()
         {
             var calendars = await _alpacaTradingClient.ListCalendarAsync(
-                DateTime.Today.AddDays(-14),
-                DateTime.Today.AddDays(14));
+                new CalendarRequest().SetInclusiveTimeInterval(
+                    DateTime.Today.AddDays(-14),
+                    DateTime.Today.AddDays(14)));
 
             Assert.NotNull(calendars);
 
@@ -220,9 +223,10 @@ namespace Alpaca.Markets.Tests
         private async Task<DateTime> getLastTradingDay()
         {
             var calendars = await _alpacaTradingClient
-                .ListCalendarAsync(
-                    DateTime.UtcNow.Date.AddDays(-14),
-                    DateTime.UtcNow.Date.AddDays(-1));
+                .ListCalendarAsync(new CalendarRequest()
+                    .SetInclusiveTimeInterval(
+                        DateTime.UtcNow.Date.AddDays(-14),
+                        DateTime.UtcNow.Date.AddDays(-1)));
 
             Assert.NotNull(calendars);
 
