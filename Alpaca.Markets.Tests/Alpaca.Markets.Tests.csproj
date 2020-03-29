@@ -7,6 +7,13 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Compile Update="AlpacaTradingClientTest.*.cs">
+      <DependentUpon>AlpacaTradingClientTest.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="3.6.0-beta3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />

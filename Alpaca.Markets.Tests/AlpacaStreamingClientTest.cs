@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    public sealed class SockClientTest
+    public sealed class AlpacaStreamingClientTest
     {
         [Fact]
         public async void ConnectWorks()

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    public sealed class PolygonSockClientTest : IDisposable
+    public sealed class PolygonStreamingClientTest : IDisposable
     {
         private const String SYMBOL = "AAPL";
 
@@ -29,7 +29,7 @@ namespace Alpaca.Markets.Tests
             waitObject.Reset();
             client.SubscribeTrade(SYMBOL);
 
-            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
+            if (await isCurrentSessionOpenAsync())
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(10)));
@@ -54,7 +54,7 @@ namespace Alpaca.Markets.Tests
 
             client.SubscribeQuote(SYMBOL);
 
-            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
+            if (await isCurrentSessionOpenAsync())
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(10)));
@@ -79,7 +79,7 @@ namespace Alpaca.Markets.Tests
 
             client.SubscribeSecondAgg(SYMBOL);
 
-            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
+            if (await isCurrentSessionOpenAsync())
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(10)));
@@ -88,7 +88,7 @@ namespace Alpaca.Markets.Tests
             await client.DisconnectAsync();
         }
 
-        [Fact(Skip="Too long running")]
+        [Fact]
         public async Task MinuteAggSubscriptionWorks()
         {
             using var client = ClientsFactory.GetPolygonStreamingClient();
@@ -104,7 +104,7 @@ namespace Alpaca.Markets.Tests
 
             client.SubscribeMinuteAgg(SYMBOL);
 
-            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
+            if (await isCurrentSessionOpenAsync())
             {
                 Assert.True(waitObject.WaitOne(
                     TimeSpan.FromSeconds(120)));
@@ -141,7 +141,7 @@ namespace Alpaca.Markets.Tests
             client.SubscribeTrade(SYMBOL);
             client.SubscribeQuote(SYMBOL);
 
-            if (_alpacaTradingClient.GetClockAsync().Result.IsOpen)
+            if (await isCurrentSessionOpenAsync())
             {
                 // ReSharper disable once CoVariantArrayConversion
                 Assert.True(WaitHandle.WaitAll(
@@ -152,5 +152,10 @@ namespace Alpaca.Markets.Tests
         }
 
         public void Dispose() => _alpacaTradingClient?.Dispose();
+
+        private async Task<Boolean> isCurrentSessionOpenAsync()
+        {
+            return (await _alpacaTradingClient.GetClockAsync()).IsOpen;
+        }
     }
 }

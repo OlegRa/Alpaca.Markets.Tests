@@ -5,11 +5,9 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    public sealed class RestClientPolygonTest : IDisposable
+    public sealed class PolygonDataClientTest : IDisposable
     {
-        private const String SYMBOL = "AAPL";
-
-        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+        private const String Symbol = "AAPL";
 
         private readonly PolygonDataClient _polygonDataClient = ClientsFactory.GetPolygonDataClient();
 
@@ -37,7 +35,7 @@ namespace Alpaca.Markets.Tests
             var historicalItems = await _polygonDataClient
                 .ListHistoricalTradesAsync(
                     new HistoricalRequest(
-                        SYMBOL, await getLastTradingDay()));
+                        Symbol, await getLastTradingDay()));
 
             Assert.NotNull(historicalItems);
 
@@ -51,7 +49,7 @@ namespace Alpaca.Markets.Tests
             var historicalItems = await _polygonDataClient
                 .ListHistoricalQuotesAsync(
                     new HistoricalRequest(
-                        SYMBOL, await getLastTradingDay()));
+                        Symbol, await getLastTradingDay()));
 
             Assert.NotNull(historicalItems);
 
@@ -68,7 +66,7 @@ namespace Alpaca.Markets.Tests
             var historicalItems = await _polygonDataClient
                 .ListAggregatesAsync(
                     new AggregatesRequest(
-                        SYMBOL, new AggregationPeriod(1, AggregationPeriodUnit.Minute))
+                        Symbol, new AggregationPeriod(1, AggregationPeriodUnit.Minute))
                         .SetInclusiveTimeInterval(dateFrom, dateInto));
 
             Assert.NotNull(historicalItems);
@@ -81,7 +79,7 @@ namespace Alpaca.Markets.Tests
         public async void GetLastTradeWorks()
         {
             var lastTrade = await _polygonDataClient
-                .GetLastTradeAsync(SYMBOL);
+                .GetLastTradeAsync(Symbol);
 
             Assert.NotNull(lastTrade);
             Assert.True(lastTrade.Time.Kind == DateTimeKind.Utc);
@@ -91,7 +89,7 @@ namespace Alpaca.Markets.Tests
         public async void GetLastQuoteWorks()
         {
             var lastQuote = await _polygonDataClient
-                .GetLastQuoteAsync(SYMBOL);
+                .GetLastQuoteAsync(Symbol);
 
             Assert.NotNull(lastQuote);
             Assert.True(lastQuote.Time.Kind == DateTimeKind.Utc);
@@ -110,9 +108,66 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(conditionMap);
         }
 
+        [Fact(Skip = "Not working - returns 404 now")]
+        public async void ListHistoricalQuotesReturnsEmptyListForSunday()
+        {
+            var sunday = DateTime.UtcNow.Date;
+            while (sunday.DayOfWeek != DayOfWeek.Sunday)
+            {
+                sunday = sunday.AddDays(-1);
+            }
+
+            var historicalItems = await _polygonDataClient
+                .ListHistoricalQuotesAsync(new HistoricalRequest(Symbol, sunday));
+
+            Assert.NotNull(historicalItems);
+
+            Assert.NotNull(historicalItems.Items);
+            Assert.Empty(historicalItems.Items);
+        }
+
+        [Fact]
+        public async void ListDayAggregatesForSpecificDatesWorks()
+        {
+            var dateInto = DateTime.Today;
+            var dateFrom = dateInto.AddDays(-7);
+
+            var historicalItems = await _polygonDataClient
+                .ListAggregatesAsync(new AggregatesRequest(
+                        Symbol, new AggregationPeriod(1, AggregationPeriodUnit.Day))
+                    .SetInclusiveTimeInterval(dateFrom, dateInto));
+
+            Assert.NotNull(historicalItems);
+
+            Assert.NotNull(historicalItems.Items);
+            Assert.NotEmpty(historicalItems.Items);
+        }
+
+        [Fact]
+        public async void ListMinuteAggregatesForSpecificDatesWorks()
+        {
+            var dateInto = DateTime.Today;
+            var dateFrom = dateInto.AddDays(-7);
+
+            var historicalItems = await _polygonDataClient
+                .ListAggregatesAsync(new AggregatesRequest(
+                        Symbol, new AggregationPeriod(1, AggregationPeriodUnit.Minute))
+                    {
+                        Unadjusted = true
+                    }
+                    .SetInclusiveTimeInterval(dateFrom, dateInto));
+
+            Assert.NotNull(historicalItems);
+
+            Assert.NotNull(historicalItems.Items);
+            Assert.NotEmpty(historicalItems.Items);
+        }
+
         private async Task<DateTime> getLastTradingDay()
         {
-            var calendars = await _alpacaTradingClient
+            using var alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+
+            var calendars = await alpacaTradingClient
                 .ListCalendarAsync(new CalendarRequest()
                     .SetInclusiveTimeInterval(
                         DateTime.UtcNow.Date.AddDays(-14),
