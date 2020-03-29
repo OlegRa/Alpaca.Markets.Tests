@@ -4,12 +4,18 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
+    [Collection("Alpaca.Markets.Tests")]
     public sealed class AlpacaStreamingClientTest
     {
+        private readonly ClientsFactoryFixture _clientsFactory;
+
+        public AlpacaStreamingClientTest(ClientsFactoryFixture clientsFactory) => 
+            _clientsFactory = clientsFactory;
+
         [Fact]
         public async void ConnectWorks()
         {
-            using var client = ClientsFactory.GetAlpacaStreamingClient();
+            using var client = _clientsFactory.GetAlpacaStreamingClient();
 
             client.OnError += (ex) =>
             {

@@ -5,16 +5,25 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
+    [Collection("Alpaca.Markets.Tests")]
     public sealed class PolygonStreamingClientTest : IDisposable
     {
-        private const String SYMBOL = "AAPL";
+        private const String Symbol = "AAPL";
 
-        private readonly AlpacaTradingClient _alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+        private readonly ClientsFactoryFixture _clientsFactory;
+
+        private readonly AlpacaTradingClient _alpacaTradingClient;
+
+        public PolygonStreamingClientTest(ClientsFactoryFixture clientsFactory)
+        {
+            _clientsFactory = clientsFactory;
+            _alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
+        }
 
         [Fact]
         public async Task TradesSubscriptionWorks()
         {
-            using var client = ClientsFactory.GetPolygonStreamingClient();
+            using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
 
@@ -22,12 +31,12 @@ namespace Alpaca.Markets.Tests
 
             client.TradeReceived += (trade) =>
             {
-                Assert.Equal(SYMBOL, trade.Symbol);
+                Assert.Equal(Symbol, trade.Symbol);
                 waitObject.Set();
             };
 
             waitObject.Reset();
-            client.SubscribeTrade(SYMBOL);
+            client.SubscribeTrade(Symbol);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -41,18 +50,18 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async Task QuotesSubscriptionWorks()
         {
-            using var client = ClientsFactory.GetPolygonStreamingClient();
+            using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
 
             var waitObject = new AutoResetEvent(false);
             client.QuoteReceived += (quote) =>
             {
-                Assert.Equal(SYMBOL, quote.Symbol);
+                Assert.Equal(Symbol, quote.Symbol);
                 waitObject.Set();
             };
 
-            client.SubscribeQuote(SYMBOL);
+            client.SubscribeQuote(Symbol);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -66,18 +75,18 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async Task SecondAggSubscriptionWorks()
         {
-            using var client = ClientsFactory.GetPolygonStreamingClient();
+            using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
 
             var waitObject = new AutoResetEvent(false);
             client.SecondAggReceived += (agg) =>
             {
-                Assert.Equal(SYMBOL, agg.Symbol);
+                Assert.Equal(Symbol, agg.Symbol);
                 waitObject.Set();
             };
 
-            client.SubscribeSecondAgg(SYMBOL);
+            client.SubscribeSecondAgg(Symbol);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -91,18 +100,18 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async Task MinuteAggSubscriptionWorks()
         {
-            using var client = ClientsFactory.GetPolygonStreamingClient();
+            using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
 
             var waitObject = new AutoResetEvent(false);
             client.MinuteAggReceived += (agg) =>
             {
-                Assert.Equal(SYMBOL, agg.Symbol);
+                Assert.Equal(Symbol, agg.Symbol);
                 waitObject.Set();
             };
 
-            client.SubscribeMinuteAgg(SYMBOL);
+            client.SubscribeMinuteAgg(Symbol);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -116,7 +125,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async Task SeveralSubscriptionWorks()
         {
-            using var client = ClientsFactory.GetPolygonStreamingClient();
+            using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
 
@@ -128,18 +137,18 @@ namespace Alpaca.Markets.Tests
 
             client.TradeReceived += (trade) =>
             {
-                Assert.Equal(SYMBOL, trade.Symbol);
+                Assert.Equal(Symbol, trade.Symbol);
                 waitObjects[0].Set();
             };
 
             client.QuoteReceived += (quote) =>
             {
-                Assert.Equal(SYMBOL, quote.Symbol);
+                Assert.Equal(Symbol, quote.Symbol);
                 waitObjects[1].Set();
             };
 
-            client.SubscribeTrade(SYMBOL);
-            client.SubscribeQuote(SYMBOL);
+            client.SubscribeTrade(Symbol);
+            client.SubscribeQuote(Symbol);
 
             if (await isCurrentSessionOpenAsync())
             {

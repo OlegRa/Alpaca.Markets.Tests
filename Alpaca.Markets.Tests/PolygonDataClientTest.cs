@@ -5,11 +5,20 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
+    [Collection("Alpaca.Markets.Tests")]
     public sealed class PolygonDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
-        private readonly PolygonDataClient _polygonDataClient = ClientsFactory.GetPolygonDataClient();
+        private readonly ClientsFactoryFixture _clientsFactory;
+
+        private readonly PolygonDataClient _polygonDataClient;
+
+        public PolygonDataClientTest(ClientsFactoryFixture clientsFactory)
+        {
+            _clientsFactory = clientsFactory;
+            _polygonDataClient = _clientsFactory.GetPolygonDataClient();
+        }
 
         [Fact]
         public async void ListExchangesWorks()
@@ -43,7 +52,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact]
+        [Fact(Skip = "Works fine only on Live environment")]
         public async void ListHistoricalQuotesWorks()
         {
             var historicalItems = await _polygonDataClient
@@ -57,7 +66,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact]
+        [Fact(Skip = "Works fine only on Live environment")]
         public async void ListMinuteAggregatesForDateRangeWorks()
         {
             var dateInto = await getLastTradingDay();
@@ -165,7 +174,7 @@ namespace Alpaca.Markets.Tests
 
         private async Task<DateTime> getLastTradingDay()
         {
-            using var alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+            using var alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
 
             var calendars = await alpacaTradingClient
                 .ListCalendarAsync(new CalendarRequest()

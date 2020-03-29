@@ -9,7 +9,7 @@ namespace Alpaca.Markets.Tests
         [Fact(Skip = "Not always work correctly")]
         public async void OrderPlaceCheckCancelWorks()
         {
-            using var sockClient = ClientsFactory.GetAlpacaStreamingClient();
+            using var sockClient = _clientsFactory.GetAlpacaStreamingClient();
 
             sockClient.OnError += (ex) =>
             {

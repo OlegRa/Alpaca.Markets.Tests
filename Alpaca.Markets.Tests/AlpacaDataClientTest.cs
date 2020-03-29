@@ -5,11 +5,20 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
+    [Collection("Alpaca.Markets.Tests")]
     public sealed class AlpacaDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
-        private readonly AlpacaDataClient _alpacaDataClient = ClientsFactory.GetAlpacaDataClient();
+        private readonly ClientsFactoryFixture _clientsFactory;
+
+        private readonly AlpacaDataClient _alpacaDataClient;
+
+        public AlpacaDataClientTest(ClientsFactoryFixture clientsFactory)
+        {
+            _clientsFactory = clientsFactory;
+            _alpacaDataClient = clientsFactory.GetAlpacaDataClient();
+        }
 
         [Fact(Skip = "Valid keys required")]
         public async void GetBarSetWorks()
@@ -82,7 +91,7 @@ namespace Alpaca.Markets.Tests
 
         private async Task<DateTime> getLastTradingDay()
         {
-            using var alpacaTradingClient = ClientsFactory.GetAlpacaTradingClient();
+            using var alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
 
             var calendars = await alpacaTradingClient
                 .ListCalendarAsync(new CalendarRequest()
