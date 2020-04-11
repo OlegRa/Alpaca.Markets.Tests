@@ -1,0 +1,32 @@
+name: Build and Test
+
+on: [push]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+
+    - name: Cache NuGet Packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.200
+
+    - name: Dotnet Build
+      env:
+        ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+        POLYGON_KEY_ID: ${{ secrets.POLYGON_KEY_ID }}
+        ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      run: dotnet test -f netcoreapp3.0

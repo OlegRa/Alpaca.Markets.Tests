@@ -1,28 +1,52 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    internal static class ClientsFactory
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    public sealed class ClientsFactoryFixture
     {
-        private const String KEY_ID = "AKEW7ZBQUSNUHOJNQ5MS";
+        private readonly String _alpacaKeyId;
 
-        private const String POLYGON_KEY_ID = KEY_ID + "-staging";
+        private readonly String _polygonKeyId;
 
-        private const String SECRET_KEY = "Yr2Tms89rQ6foRLNu4pz3w/yXOrxQGDmXctU1BCn";
+        private readonly String _alpacaSecretKey;
 
-        public static AlpacaDataClient GetAlpacaDataClient() =>
-            Staging.Environment.GetAlpacaDataClient(KEY_ID, new SecretKey(SECRET_KEY));
+        public ClientsFactoryFixture()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddJsonFile(Path.Combine(
+                    Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
+                .Build();
 
-        public static AlpacaTradingClient GetAlpacaTradingClient() =>
-            Staging.Environment.GetAlpacaTradingClient(KEY_ID, new SecretKey(SECRET_KEY));
+            _alpacaKeyId = configuration["ALPACA_KEY_ID"];
+            _polygonKeyId = configuration["POLYGON_KEY_ID"];
+            _alpacaSecretKey = configuration["ALPACA_SECRET_KEY"];
+        }
 
-        public static PolygonDataClient GetPolygonDataClient() =>
-            Staging.Environment.GetPolygonDataClient(POLYGON_KEY_ID);
+        public PolygonDataClient GetPolygonDataClient() =>
+            Staging.Environment.GetPolygonDataClient(_polygonKeyId);
 
-        public static AlpacaStreamingClient GetAlpacaStreamingClient() =>
-            Staging.Environment.GetAlpacaStreamingClient(KEY_ID, SECRET_KEY);
+        public AlpacaDataClient GetAlpacaDataClient() =>
+            Staging.Environment.GetAlpacaDataClient(getSecretKey());
 
-        public static PolygonStreamingClient GetPolygonStreamingClient() =>
-            Staging.Environment.GetPolygonStreamingClient(POLYGON_KEY_ID);
+        public AlpacaTradingClient GetAlpacaTradingClient() =>
+            Staging.Environment.GetAlpacaTradingClient(getSecretKey());
+
+        public AlpacaStreamingClient GetAlpacaStreamingClient() =>
+            Staging.Environment.GetAlpacaStreamingClient(getSecretKey());
+
+        public PolygonStreamingClient GetPolygonStreamingClient() =>
+            Staging.Environment.GetPolygonStreamingClient(_polygonKeyId);
+
+        private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
     }
+
+    
+    [CollectionDefinition("Alpaca.Markets.Tests")]
+    public sealed class ClientsFactoryCollection : ICollectionFixture<ClientsFactoryFixture> { }
 }
