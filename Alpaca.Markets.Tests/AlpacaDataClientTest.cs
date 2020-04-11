@@ -6,7 +6,7 @@ using Xunit;
 namespace Alpaca.Markets.Tests
 {
     [Collection("Alpaca.Markets.Tests")]
-    public sealed class AlpacaDataClientTest : IDisposable
+    public abstract class AlpacaDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
@@ -20,7 +20,7 @@ namespace Alpaca.Markets.Tests
             _alpacaDataClient = clientsFactory.GetAlpacaDataClient();
         }
 
-        [Fact(Skip = "Valid keys required")]
+        [Fact]
         public async void GetBarSetWorks()
         {
             var barSet = await _alpacaDataClient.GetBarSetAsync(
@@ -36,7 +36,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(bars);
         }
 
-        [Fact(Skip = "Valid keys required")]
+        [Fact]
         public async void GetBarSetForTimeScopeWorks()
         {
             var dateInto = await getLastTradingDay();
@@ -62,7 +62,7 @@ namespace Alpaca.Markets.Tests
             Assert.True(barsList.Last().Time <= dateInto);
         }
 
-        [Fact(Skip = "Valid keys required")]
+        [Fact]
         public async void GetBarSetForTwoSymbolsWorks()
         {
             const Int32 limit = 10;

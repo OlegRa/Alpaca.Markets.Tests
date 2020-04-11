@@ -6,7 +6,7 @@ using Xunit;
 namespace Alpaca.Markets.Tests
 {
     [Collection("Alpaca.Markets.Tests")]
-    public sealed class PolygonDataClientTest : IDisposable
+    public abstract class PolygonDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
