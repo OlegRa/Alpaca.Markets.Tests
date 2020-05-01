@@ -17,5 +17,7 @@ namespace Alpaca.Markets.Tests
         public Uri AlpacaStreamingApi { get; } = new Uri("wss://staging-api.tradetalk.us/stream");
 
         public Uri PolygonStreamingApi => Environments.Live.PolygonStreamingApi;
+
+        public Uri AlpacaDataStreamingApi => Environments.Live.AlpacaDataStreamingApi;
     }
 }

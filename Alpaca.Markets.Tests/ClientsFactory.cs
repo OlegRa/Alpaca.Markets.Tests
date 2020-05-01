@@ -43,6 +43,9 @@ namespace Alpaca.Markets.Tests
         public PolygonStreamingClient GetPolygonStreamingClient() =>
             Staging.Environment.GetPolygonStreamingClient(_polygonKeyId);
 
+        public AlpacaDataStreamingClient GetAlpacaDataStreamingClient() =>
+            Staging.Environment.GetAlpacaDataStreamingClient(getSecretKey());
+
         private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
     }
 
