@@ -6,7 +6,7 @@ using Xunit;
 namespace Alpaca.Markets.Tests
 {
     [Collection("Alpaca.Markets.Tests")]
-    public sealed class AlpacaDataStreamingClientTest : IDisposable
+    public abstract class AlpacaDataStreamingClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
