@@ -108,6 +108,35 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
+        public async Task AllMinuteAggSubscriptionWorks()
+        {
+            using var client = _clientsFactory.GetAlpacaDataStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var waitObject = new AutoResetEvent(false);
+
+            var subscription = client.GetMinuteAggSubscription();
+            subscription.Received += (agg) =>
+            {
+                Assert.Equal(Symbol, agg.Symbol);
+                waitObject.Set();
+            };
+
+            client.Subscribe(subscription);
+
+            if (await isCurrentSessionOpenAsync())
+            {
+                Assert.True(waitObject.WaitOne(
+                    TimeSpan.FromMinutes(2)));
+            }
+
+            client.Unsubscribe(subscription);
+
+            await client.DisconnectAsync();
+        }
+
+        [Fact]
         public async Task SeveralSubscriptionWorks()
         {
             using var client = _clientsFactory.GetAlpacaDataStreamingClient();
