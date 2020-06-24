@@ -48,7 +48,6 @@ namespace Alpaca.Markets.Tests
 
         private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
     }
-
     
     [CollectionDefinition("Alpaca.Markets.Tests")]
     public sealed class ClientsFactoryCollection : ICollectionFixture<ClientsFactoryFixture> { }

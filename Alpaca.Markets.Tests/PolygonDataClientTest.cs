@@ -91,7 +91,7 @@ namespace Alpaca.Markets.Tests
                 .GetLastTradeAsync(Symbol);
 
             Assert.NotNull(lastTrade);
-            Assert.True(lastTrade.Time.Kind == DateTimeKind.Utc);
+            Assert.True(lastTrade.TimeUtc.Kind == DateTimeKind.Utc);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Alpaca.Markets.Tests
                 .GetLastQuoteAsync(Symbol);
 
             Assert.NotNull(lastQuote);
-            Assert.True(lastQuote.Time.Kind == DateTimeKind.Utc);
+            Assert.True(lastQuote.TimeUtc.Kind == DateTimeKind.Utc);
         }
 
         [Theory]
@@ -184,7 +184,7 @@ namespace Alpaca.Markets.Tests
 
             Assert.NotNull(calendars);
 
-            return calendars.Last().TradingCloseTime;
+            return calendars.Last().TradingCloseTimeUtc;
         }
 
         public void Dispose()

@@ -26,8 +26,8 @@ namespace Alpaca.Markets.Tests
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(newWatchList.Name, updatedWatchList.Name);
-            Assert.Equal(newWatchList.Created, updatedWatchList.Created);
-            Assert.Equal(newWatchList.Updated, updatedWatchList.Updated);
+            Assert.Equal(newWatchList.CreatedUtc, updatedWatchList.CreatedUtc);
+            Assert.Equal(newWatchList.UpdatedUtc, updatedWatchList.UpdatedUtc);
             Assert.Equal(newWatchList.WatchListId, updatedWatchList.WatchListId);
             Assert.Equal(newWatchList.Assets.Count, updatedWatchList.Assets.Count);
 
@@ -80,8 +80,8 @@ namespace Alpaca.Markets.Tests
 
             Assert.NotNull(updatedWatchList);
             Assert.Equal(newWatchList.Name, updatedWatchList.Name);
-            Assert.Equal(newWatchList.Created, updatedWatchList.Created);
-            Assert.Equal(newWatchList.Updated, updatedWatchList.Updated);
+            Assert.Equal(newWatchList.CreatedUtc, updatedWatchList.CreatedUtc);
+            Assert.Equal(newWatchList.UpdatedUtc, updatedWatchList.UpdatedUtc);
             Assert.Equal(newWatchList.WatchListId, updatedWatchList.WatchListId);
             Assert.Equal(newWatchList.Assets.Count, updatedWatchList.Assets.Count);
 

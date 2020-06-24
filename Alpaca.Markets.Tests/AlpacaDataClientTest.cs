@@ -58,8 +58,8 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(barsList);
             Assert.True(barsList.Count >= 2);
 
-            Assert.True(barsList.First().Time >= dateFrom);
-            Assert.True(barsList.Last().Time <= dateInto);
+            Assert.True(barsList.First().TimeUtc >= dateFrom);
+            Assert.True(barsList.Last().TimeUtc <= dateInto);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Alpaca.Markets.Tests
 
             Assert.NotNull(calendars);
 
-            return calendars.Last().TradingCloseTime;
+            return calendars.Last().TradingCloseTimeUtc;
         }
 
         public void Dispose() => _alpacaDataClient?.Dispose();

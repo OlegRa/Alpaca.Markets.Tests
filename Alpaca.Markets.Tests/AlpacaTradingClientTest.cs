@@ -152,8 +152,8 @@ namespace Alpaca.Markets.Tests
             var clock = await _alpacaTradingClient.GetClockAsync();
 
             Assert.NotNull(clock);
-            Assert.True(clock.NextOpen > clock.Timestamp);
-            Assert.True(clock.NextClose > clock.Timestamp);
+            Assert.True(clock.NextOpenUtc > clock.TimestampUtc);
+            Assert.True(clock.NextCloseUtc > clock.TimestampUtc);
         }
 
         [Fact]
@@ -173,9 +173,9 @@ namespace Alpaca.Markets.Tests
             var first = calendarsList.First();
             var last = calendarsList.Last();
 
-            Assert.True(first.TradingDate <= last.TradingDate);
-            Assert.True(first.TradingOpenTime < first.TradingCloseTime);
-            Assert.True(last.TradingOpenTime < last.TradingCloseTime);
+            Assert.True(first.TradingDateUtc <= last.TradingDateUtc);
+            Assert.True(first.TradingOpenTimeUtc < first.TradingCloseTimeUtc);
+            Assert.True(last.TradingOpenTimeUtc < last.TradingCloseTimeUtc);
         }
 
         [Fact(Skip = "Run too long and sometimes fail")]
