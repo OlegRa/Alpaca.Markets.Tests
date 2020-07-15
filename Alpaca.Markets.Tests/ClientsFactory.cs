@@ -7,15 +7,13 @@ using Xunit;
 namespace Alpaca.Markets.Tests
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    public sealed class ClientsFactoryFixture
+    public sealed class PaperEnvironmentClientsFactoryFixture
     {
         private readonly String _alpacaKeyId;
 
-        private readonly String _polygonKeyId;
-
         private readonly String _alpacaSecretKey;
 
-        public ClientsFactoryFixture()
+        public PaperEnvironmentClientsFactoryFixture()
         {
             var configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
@@ -23,32 +21,59 @@ namespace Alpaca.Markets.Tests
                     Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
                 .Build();
 
-            _alpacaKeyId = configuration["ALPACA_KEY_ID"];
-            _polygonKeyId = configuration["POLYGON_KEY_ID"];
-            _alpacaSecretKey = configuration["ALPACA_SECRET_KEY"];
+            _alpacaKeyId = configuration["PAPER_ALPACA_KEY_ID"];
+            _alpacaSecretKey = configuration["PAPER_ALPACA_SECRET_KEY"];
         }
 
-        public PolygonDataClient GetPolygonDataClient() =>
-            Staging.Environment.GetPolygonDataClient(_polygonKeyId);
-
         public AlpacaDataClient GetAlpacaDataClient() =>
-            Staging.Environment.GetAlpacaDataClient(getSecretKey());
+            Environments.Paper.GetAlpacaDataClient(getSecretKey());
 
         public AlpacaTradingClient GetAlpacaTradingClient() =>
-            Staging.Environment.GetAlpacaTradingClient(getSecretKey());
+            Environments.Paper.GetAlpacaTradingClient(getSecretKey());
 
         public AlpacaStreamingClient GetAlpacaStreamingClient() =>
-            Staging.Environment.GetAlpacaStreamingClient(getSecretKey());
-
-        public PolygonStreamingClient GetPolygonStreamingClient() =>
-            Staging.Environment.GetPolygonStreamingClient(_polygonKeyId);
+            Environments.Paper.GetAlpacaStreamingClient(getSecretKey());
 
         public AlpacaDataStreamingClient GetAlpacaDataStreamingClient() =>
-            Staging.Environment.GetAlpacaDataStreamingClient(getSecretKey());
+            Environments.Paper.GetAlpacaDataStreamingClient(getSecretKey());
 
         private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
     }
-    
-    [CollectionDefinition("Alpaca.Markets.Tests")]
-    public sealed class ClientsFactoryCollection : ICollectionFixture<ClientsFactoryFixture> { }
+
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    public sealed class LiveEnvironmentClientsFactoryFixture
+    {
+        private readonly String _alpacaKeyId;
+
+        private readonly String _alpacaSecretKey;
+
+        public LiveEnvironmentClientsFactoryFixture()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddJsonFile(Path.Combine(
+                    Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
+                .Build();
+
+            _alpacaKeyId = configuration["LIVE_ALPACA_KEY_ID"];
+            _alpacaSecretKey = configuration["LIVE_ALPACA_SECRET_KEY"];
+        }
+
+        public PolygonDataClient GetPolygonDataClient() =>
+            Environments.Live.GetPolygonDataClient(_alpacaKeyId);
+
+        public PolygonStreamingClient GetPolygonStreamingClient() =>
+            Environments.Paper.GetPolygonStreamingClient(_alpacaKeyId);
+
+        public AlpacaTradingClient GetAlpacaTradingClient() =>
+            Environments.Live.GetAlpacaTradingClient(getSecretKey());
+
+        private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
+    }
+
+    [CollectionDefinition("PaperEnvironment")]
+    public sealed class PaperEnvironmentClientsFactoryCollection : ICollectionFixture<PaperEnvironmentClientsFactoryFixture> { }
+
+    [CollectionDefinition("LiveEnvironment")]
+    public sealed class LiveEnvironmentClientsFactoryCollection : ICollectionFixture<LiveEnvironmentClientsFactoryFixture> { }
 }

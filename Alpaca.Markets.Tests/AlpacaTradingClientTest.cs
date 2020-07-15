@@ -5,16 +5,16 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    [Collection("Alpaca.Markets.Tests")]
+    [Collection("PaperEnvironment")]
     public sealed partial class AlpacaTradingClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
-        private readonly ClientsFactoryFixture _clientsFactory;
+        private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
         private readonly AlpacaTradingClient _alpacaTradingClient;
 
-        public AlpacaTradingClientTest(ClientsFactoryFixture clientsFactory)
+        public AlpacaTradingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
         {
             _clientsFactory = clientsFactory;
             _alpacaTradingClient = clientsFactory.GetAlpacaTradingClient();
