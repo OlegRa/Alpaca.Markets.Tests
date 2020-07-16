@@ -89,6 +89,24 @@ namespace Alpaca.Markets.Tests
             }
         }
 
+        
+        [Fact]
+        public async void GetBarParticularDay()
+        {
+            var barSet = await _alpacaDataClient.GetBarSetAsync(
+                new BarSetRequest("TSLA", TimeFrame.Minute)
+                    .SetInclusiveTimeInterval(
+                        new DateTime(2020, 5, 29, 0, 0, 0, DateTimeKind.Utc),
+                        new DateTime(2020, 5, 30, 0, 0, 0, DateTimeKind.Utc)));
+
+            Assert.NotNull(barSet);
+
+            var bars = barSet["TSLA"]
+                .OrderBy(_ => _.TimeUtc)
+                .ToList();
+            Assert.NotNull(bars);
+        }
+
         private async Task<DateTime> getLastTradingDay()
         {
             using var alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
