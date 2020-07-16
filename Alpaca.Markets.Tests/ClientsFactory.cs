@@ -45,7 +45,7 @@ namespace Alpaca.Markets.Tests
     {
         private readonly String _alpacaKeyId;
 
-        private readonly String _alpacaSecretKey;
+        private readonly SecretKey _alpacaSecretKey;
 
         public LiveEnvironmentClientsFactoryFixture()
         {
@@ -56,19 +56,24 @@ namespace Alpaca.Markets.Tests
                 .Build();
 
             _alpacaKeyId = configuration["LIVE_ALPACA_KEY_ID"];
-            _alpacaSecretKey = configuration["LIVE_ALPACA_SECRET_KEY"];
+            
+            var alpacaSecretKey = configuration["LIVE_ALPACA_SECRET_KEY"];
+
+            _alpacaSecretKey = String.IsNullOrEmpty(alpacaSecretKey)
+                ? new SecretKey(
+                    configuration["PAPER_ALPACA_KEY_ID"],
+                    configuration["PAPER_ALPACA_SECRET_KEY"])
+                : new SecretKey(_alpacaKeyId, alpacaSecretKey);
         }
 
         public PolygonDataClient GetPolygonDataClient() =>
             Environments.Live.GetPolygonDataClient(_alpacaKeyId);
 
         public PolygonStreamingClient GetPolygonStreamingClient() =>
-            Environments.Paper.GetPolygonStreamingClient(_alpacaKeyId);
+            Environments.Live.GetPolygonStreamingClient(_alpacaKeyId);
 
         public AlpacaTradingClient GetAlpacaTradingClient() =>
-            Environments.Live.GetAlpacaTradingClient(getSecretKey());
-
-        private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
+            Environments.Live.GetAlpacaTradingClient(_alpacaSecretKey);
     }
 
     [CollectionDefinition("PaperEnvironment")]

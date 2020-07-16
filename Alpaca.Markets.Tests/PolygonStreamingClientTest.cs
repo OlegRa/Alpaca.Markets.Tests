@@ -5,8 +5,8 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    [Collection("PaperEnvironment")]
-    public abstract class PolygonStreamingClientTest : IDisposable
+    [Collection("LiveEnvironment")]
+    public sealed class PolygonStreamingClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 

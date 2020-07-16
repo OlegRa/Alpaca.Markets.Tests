@@ -5,8 +5,8 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    [Collection("PaperEnvironment")]
-    public abstract class PolygonDataClientTest : IDisposable
+    [Collection("LiveEnvironment")]
+    public sealed class PolygonDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
@@ -52,7 +52,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact(Skip = "Works fine only on Live environment")]
+        [Fact]
         public async void ListHistoricalQuotesWorks()
         {
             var historicalItems = await _polygonDataClient
@@ -66,7 +66,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact(Skip = "Works fine only on Live environment")]
+        [Fact]
         public async void ListMinuteAggregatesForDateRangeWorks()
         {
             var dateInto = await getLastTradingDay();
