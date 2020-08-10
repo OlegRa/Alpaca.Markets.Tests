@@ -12,7 +12,7 @@ namespace Alpaca.Markets.Tests
 
         private readonly LiveEnvironmentClientsFactoryFixture _clientsFactory;
 
-        private readonly AlpacaTradingClient _alpacaTradingClient;
+        private readonly IAlpacaTradingClient _alpacaTradingClient;
 
         public PolygonStreamingClientTest(LiveEnvironmentClientsFactoryFixture clientsFactory)
         {

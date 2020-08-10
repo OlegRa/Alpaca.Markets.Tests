@@ -25,16 +25,16 @@ namespace Alpaca.Markets.Tests
             _alpacaSecretKey = configuration["PAPER_ALPACA_SECRET_KEY"];
         }
 
-        public AlpacaDataClient GetAlpacaDataClient() =>
+        public IAlpacaDataClient GetAlpacaDataClient() =>
             Environments.Paper.GetAlpacaDataClient(getSecretKey());
 
-        public AlpacaTradingClient GetAlpacaTradingClient() =>
+        public IAlpacaTradingClient GetAlpacaTradingClient() =>
             Environments.Paper.GetAlpacaTradingClient(getSecretKey());
 
-        public AlpacaStreamingClient GetAlpacaStreamingClient() =>
+        public IAlpacaStreamingClient GetAlpacaStreamingClient() =>
             Environments.Paper.GetAlpacaStreamingClient(getSecretKey());
 
-        public AlpacaDataStreamingClient GetAlpacaDataStreamingClient() =>
+        public IAlpacaDataStreamingClient GetAlpacaDataStreamingClient() =>
             Environments.Paper.GetAlpacaDataStreamingClient(getSecretKey());
 
         private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
@@ -66,13 +66,13 @@ namespace Alpaca.Markets.Tests
                 : new SecretKey(_alpacaKeyId, alpacaSecretKey);
         }
 
-        public PolygonDataClient GetPolygonDataClient() =>
+        public IPolygonDataClient GetPolygonDataClient() =>
             Environments.Live.GetPolygonDataClient(_alpacaKeyId);
 
-        public PolygonStreamingClient GetPolygonStreamingClient() =>
+        public IPolygonStreamingClient GetPolygonStreamingClient() =>
             Environments.Live.GetPolygonStreamingClient(_alpacaKeyId);
 
-        public AlpacaTradingClient GetAlpacaTradingClient() =>
+        public IAlpacaTradingClient GetAlpacaTradingClient() =>
             Environments.Live.GetAlpacaTradingClient(_alpacaSecretKey);
     }
 

@@ -12,7 +12,7 @@ namespace Alpaca.Markets.Tests
 
         private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
-        private readonly AlpacaTradingClient _alpacaTradingClient;
+        private readonly IAlpacaTradingClient _alpacaTradingClient;
 
         public AlpacaTradingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
         {
@@ -100,7 +100,8 @@ namespace Alpaca.Markets.Tests
             var first = ordersList.First();
 
             var orderById = await _alpacaTradingClient.GetOrderAsync(first.OrderId);
-            var orderByClientId = await _alpacaTradingClient.GetOrderAsync(first.ClientOrderId);
+            var orderByClientId = await _alpacaTradingClient.GetOrderAsync(
+                first.ClientOrderId ?? String.Empty);
 
             Assert.NotNull(orderById);
             Assert.NotNull(orderByClientId);

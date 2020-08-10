@@ -12,7 +12,7 @@ namespace Alpaca.Markets.Tests
 
         private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
-        private readonly AlpacaDataClient _alpacaDataClient;
+        private readonly IAlpacaDataClient _alpacaDataClient;
 
         public AlpacaDataClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
         {

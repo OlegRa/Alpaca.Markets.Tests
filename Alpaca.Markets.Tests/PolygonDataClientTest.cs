@@ -12,7 +12,7 @@ namespace Alpaca.Markets.Tests
 
         private readonly LiveEnvironmentClientsFactoryFixture _clientsFactory;
 
-        private readonly PolygonDataClient _polygonDataClient;
+        private readonly IPolygonDataClient _polygonDataClient;
 
         public PolygonDataClientTest(LiveEnvironmentClientsFactoryFixture clientsFactory)
         {
