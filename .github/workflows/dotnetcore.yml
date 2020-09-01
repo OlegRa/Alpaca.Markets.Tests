@@ -26,7 +26,7 @@ jobs:
 
     - name: Dotnet Build
       env:
-        ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
-        POLYGON_KEY_ID: ${{ secrets.POLYGON_KEY_ID }}
-        ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        LIVE_ALPACA_KEY_ID: ${{ secrets.LIVE_ALPACA_KEY_ID }}
+        PAPER_ALPACA_KEY_ID: ${{ secrets.PAPER_ALPACA_KEY_ID }}
+        PAPER_ALPACA_SECRET_KEY: ${{ secrets.PAPER_ALPACA_SECRET_KEY }}
       run: dotnet test -f netcoreapp3.0

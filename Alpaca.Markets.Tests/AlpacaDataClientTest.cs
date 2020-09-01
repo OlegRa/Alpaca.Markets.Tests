@@ -5,16 +5,16 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    [Collection("Alpaca.Markets.Tests")]
-    public abstract class AlpacaDataClientTest : IDisposable
+    [Collection("PaperEnvironment")]
+    public sealed class AlpacaDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
-        private readonly ClientsFactoryFixture _clientsFactory;
+        private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
-        private readonly AlpacaDataClient _alpacaDataClient;
+        private readonly IAlpacaDataClient _alpacaDataClient;
 
-        public AlpacaDataClientTest(ClientsFactoryFixture clientsFactory)
+        public AlpacaDataClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
         {
             _clientsFactory = clientsFactory;
             _alpacaDataClient = clientsFactory.GetAlpacaDataClient();
@@ -58,8 +58,8 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(barsList);
             Assert.True(barsList.Count >= 2);
 
-            Assert.True(barsList.First().Time >= dateFrom);
-            Assert.True(barsList.Last().Time <= dateInto);
+            Assert.True(barsList.First().TimeUtc >= dateFrom);
+            Assert.True(barsList.Last().TimeUtc <= dateInto);
         }
 
         [Fact]
@@ -89,6 +89,24 @@ namespace Alpaca.Markets.Tests
             }
         }
 
+        
+        [Fact]
+        public async void GetBarParticularDay()
+        {
+            var barSet = await _alpacaDataClient.GetBarSetAsync(
+                new BarSetRequest("TSLA", TimeFrame.Minute)
+                    .SetInclusiveTimeInterval(
+                        new DateTime(2020, 5, 29, 0, 0, 0, DateTimeKind.Utc),
+                        new DateTime(2020, 5, 30, 0, 0, 0, DateTimeKind.Utc)));
+
+            Assert.NotNull(barSet);
+
+            var bars = barSet["TSLA"]
+                .OrderBy(_ => _.TimeUtc)
+                .ToList();
+            Assert.NotNull(bars);
+        }
+
         private async Task<DateTime> getLastTradingDay()
         {
             using var alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
@@ -101,7 +119,7 @@ namespace Alpaca.Markets.Tests
 
             Assert.NotNull(calendars);
 
-            return calendars.Last().TradingCloseTime;
+            return calendars.Last().TradingCloseTimeUtc;
         }
 
         public void Dispose() => _alpacaDataClient?.Dispose();

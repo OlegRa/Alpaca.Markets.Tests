@@ -5,16 +5,16 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    [Collection("Alpaca.Markets.Tests")]
-    public abstract class PolygonDataClientTest : IDisposable
+    [Collection("LiveEnvironment")]
+    public sealed class PolygonDataClientTest : IDisposable
     {
         private const String Symbol = "AAPL";
 
-        private readonly ClientsFactoryFixture _clientsFactory;
+        private readonly LiveEnvironmentClientsFactoryFixture _clientsFactory;
 
-        private readonly PolygonDataClient _polygonDataClient;
+        private readonly IPolygonDataClient _polygonDataClient;
 
-        public PolygonDataClientTest(ClientsFactoryFixture clientsFactory)
+        public PolygonDataClientTest(LiveEnvironmentClientsFactoryFixture clientsFactory)
         {
             _clientsFactory = clientsFactory;
             _polygonDataClient = _clientsFactory.GetPolygonDataClient();
@@ -52,7 +52,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact(Skip = "Works fine only on Live environment")]
+        [Fact]
         public async void ListHistoricalQuotesWorks()
         {
             var historicalItems = await _polygonDataClient
@@ -66,7 +66,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact(Skip = "Works fine only on Live environment")]
+        [Fact]
         public async void ListMinuteAggregatesForDateRangeWorks()
         {
             var dateInto = await getLastTradingDay();
@@ -91,7 +91,7 @@ namespace Alpaca.Markets.Tests
                 .GetLastTradeAsync(Symbol);
 
             Assert.NotNull(lastTrade);
-            Assert.True(lastTrade.Time.Kind == DateTimeKind.Utc);
+            Assert.True(lastTrade.TimeUtc.Kind == DateTimeKind.Utc);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Alpaca.Markets.Tests
                 .GetLastQuoteAsync(Symbol);
 
             Assert.NotNull(lastQuote);
-            Assert.True(lastQuote.Time.Kind == DateTimeKind.Utc);
+            Assert.True(lastQuote.TimeUtc.Kind == DateTimeKind.Utc);
         }
 
         [Theory]
@@ -184,7 +184,7 @@ namespace Alpaca.Markets.Tests
 
             Assert.NotNull(calendars);
 
-            return calendars.Last().TradingCloseTime;
+            return calendars.Last().TradingCloseTimeUtc;
         }
 
         public void Dispose()

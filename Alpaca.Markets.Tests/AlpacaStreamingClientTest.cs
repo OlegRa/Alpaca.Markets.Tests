@@ -4,12 +4,12 @@ using Xunit;
 
 namespace Alpaca.Markets.Tests
 {
-    [Collection("Alpaca.Markets.Tests")]
+    [Collection("PaperEnvironment")]
     public sealed class AlpacaStreamingClientTest
     {
-        private readonly ClientsFactoryFixture _clientsFactory;
+        private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
-        public AlpacaStreamingClientTest(ClientsFactoryFixture clientsFactory) => 
+        public AlpacaStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory) => 
             _clientsFactory = clientsFactory;
 
         [Fact]
