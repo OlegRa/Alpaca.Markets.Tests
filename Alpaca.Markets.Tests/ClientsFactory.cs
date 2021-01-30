@@ -21,8 +21,8 @@ namespace Alpaca.Markets.Tests
                     Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
                 .Build();
 
-            _alpacaKeyId = configuration["PAPER_ALPACA_KEY_ID"];
-            _alpacaSecretKey = configuration["PAPER_ALPACA_SECRET_KEY"];
+            _alpacaKeyId = configuration["PAPER_ALPACA_KEY_ID"] ?? Guid.NewGuid().ToString("N");
+            _alpacaSecretKey = configuration["PAPER_ALPACA_SECRET_KEY"] ?? String.Empty;
         }
 
         public IAlpacaDataClient GetAlpacaDataClient() =>
@@ -45,7 +45,7 @@ namespace Alpaca.Markets.Tests
     {
         private readonly String _alpacaKeyId;
 
-        private readonly SecretKey _alpacaSecretKey;
+        private readonly String _alpacaSecretKey;
 
         public LiveEnvironmentClientsFactoryFixture()
         {
@@ -55,16 +55,11 @@ namespace Alpaca.Markets.Tests
                     Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
                 .Build();
 
-            _alpacaKeyId = configuration["LIVE_ALPACA_KEY_ID"];
-            
-            var alpacaSecretKey = configuration["LIVE_ALPACA_SECRET_KEY"];
-
-            _alpacaSecretKey = String.IsNullOrEmpty(alpacaSecretKey)
-                ? new SecretKey(
-                    configuration["PAPER_ALPACA_KEY_ID"],
-                    configuration["PAPER_ALPACA_SECRET_KEY"])
-                : new SecretKey(_alpacaKeyId, alpacaSecretKey);
+            _alpacaKeyId = configuration["LIVE_ALPACA_KEY_ID"] ?? Guid.NewGuid().ToString("N");
+            _alpacaSecretKey = configuration["LIVE_ALPACA_SECRET_KEY"] ?? String.Empty;
         }
+
+        public Boolean LiveAlpacaIdDoesNotFound => String.IsNullOrEmpty(_alpacaSecretKey);
 
         public IPolygonDataClient GetPolygonDataClient() =>
             Environments.Live.GetPolygonDataClient(_alpacaKeyId);
@@ -73,7 +68,7 @@ namespace Alpaca.Markets.Tests
             Environments.Live.GetPolygonStreamingClient(_alpacaKeyId);
 
         public IAlpacaTradingClient GetAlpacaTradingClient() =>
-            Environments.Live.GetAlpacaTradingClient(_alpacaSecretKey);
+            Environments.Live.GetAlpacaTradingClient(new SecretKey(_alpacaKeyId, _alpacaSecretKey));
     }
 
     [CollectionDefinition("PaperEnvironment")]
