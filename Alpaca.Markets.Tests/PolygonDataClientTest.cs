@@ -20,27 +20,33 @@ namespace Alpaca.Markets.Tests
             _polygonDataClient = _clientsFactory.GetPolygonDataClient();
         }
 
-        [Fact]
+        [SkippableFact]
         public async void ListExchangesWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var exchanges = await _polygonDataClient.ListExchangesAsync();
 
             Assert.NotNull(exchanges);
             Assert.NotEmpty(exchanges);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void GetSymbolTypeMapWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var symbolTypeMap = await _polygonDataClient.GetSymbolTypeMapAsync();
 
             Assert.NotNull(symbolTypeMap);
             Assert.NotEmpty(symbolTypeMap);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void ListHistoricalTradesWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var historicalItems = await _polygonDataClient
                 .ListHistoricalTradesAsync(
                     new HistoricalRequest(
@@ -52,9 +58,11 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void ListHistoricalQuotesWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var historicalItems = await _polygonDataClient
                 .ListHistoricalQuotesAsync(
                     new HistoricalRequest(
@@ -66,9 +74,11 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void ListMinuteAggregatesForDateRangeWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var dateInto = await getLastTradingDay();
             var dateFrom = dateInto.AddHours(-20);
 
@@ -84,9 +94,11 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void GetLastTradeWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var lastTrade = await _polygonDataClient
                 .GetLastTradeAsync(Symbol);
 
@@ -94,9 +106,11 @@ namespace Alpaca.Markets.Tests
             Assert.True(lastTrade.TimeUtc.Kind == DateTimeKind.Utc);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void GetLastQuoteWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var lastQuote = await _polygonDataClient
                 .GetLastQuoteAsync(Symbol);
 
@@ -104,12 +118,14 @@ namespace Alpaca.Markets.Tests
             Assert.True(lastQuote.TimeUtc.Kind == DateTimeKind.Utc);
         }
 
-        [Theory]
+        [SkippableTheory]
         [InlineData(TickType.Trades)]
         [InlineData(TickType.Quotes)]
         public async void GetConditionMapForQuotesWorks(
             TickType tickType)
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var conditionMap = await _polygonDataClient
                 .GetConditionMapAsync(tickType);
 
@@ -135,9 +151,11 @@ namespace Alpaca.Markets.Tests
             Assert.Empty(historicalItems.Items);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void ListDayAggregatesForSpecificDatesWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var dateInto = DateTime.Today;
             var dateFrom = dateInto.AddDays(-7);
 
@@ -152,9 +170,11 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(historicalItems.Items);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void ListMinuteAggregatesForSpecificDatesWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             var dateInto = DateTime.Today;
             var dateFrom = dateInto.AddDays(-7);
 
@@ -187,9 +207,6 @@ namespace Alpaca.Markets.Tests
             return calendars.Last().TradingCloseTimeUtc;
         }
 
-        public void Dispose()
-        {
-            _polygonDataClient?.Dispose();
-        }
+        public void Dispose() => _polygonDataClient?.Dispose();
     }
 }

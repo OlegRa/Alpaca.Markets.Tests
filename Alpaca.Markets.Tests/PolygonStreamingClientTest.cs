@@ -20,9 +20,11 @@ namespace Alpaca.Markets.Tests
             _alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task TradesSubscriptionWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
@@ -47,9 +49,11 @@ namespace Alpaca.Markets.Tests
             await client.DisconnectAsync();
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task QuotesSubscriptionWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
@@ -72,9 +76,11 @@ namespace Alpaca.Markets.Tests
             await client.DisconnectAsync();
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task SecondAggSubscriptionWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
@@ -97,9 +103,11 @@ namespace Alpaca.Markets.Tests
             await client.DisconnectAsync();
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task MinuteAggSubscriptionWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
@@ -122,9 +130,11 @@ namespace Alpaca.Markets.Tests
             await client.DisconnectAsync();
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task SeveralSubscriptionWorks()
         {
+            Skip.If(_clientsFactory.LiveAlpacaIdDoesNotFound);
+
             using var client = _clientsFactory.GetPolygonStreamingClient();
 
             await client.ConnectAndAuthenticateAsync();
@@ -162,9 +172,7 @@ namespace Alpaca.Markets.Tests
 
         public void Dispose() => _alpacaTradingClient?.Dispose();
 
-        private async Task<Boolean> isCurrentSessionOpenAsync()
-        {
-            return (await _alpacaTradingClient.GetClockAsync()).IsOpen;
-        }
+        private async Task<Boolean> isCurrentSessionOpenAsync() => 
+            (await _alpacaTradingClient.GetClockAsync()).IsOpen;
     }
 }
