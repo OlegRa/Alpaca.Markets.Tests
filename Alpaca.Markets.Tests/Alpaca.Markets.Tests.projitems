@@ -19,9 +19,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)PolygonDataClientTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PolygonStreamingClientTest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 </Project>
