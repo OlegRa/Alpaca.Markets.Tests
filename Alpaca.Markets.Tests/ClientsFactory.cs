@@ -18,7 +18,7 @@ namespace Alpaca.Markets.Tests
             var configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .AddJsonFile(Path.Combine(
-                    Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
+                    Environment.CurrentDirectory, @"Development.json"), true)
                 .Build();
 
             _alpacaKeyId = configuration["PAPER_ALPACA_KEY_ID"] ?? Guid.NewGuid().ToString("N");
@@ -52,7 +52,7 @@ namespace Alpaca.Markets.Tests
             var configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .AddJsonFile(Path.Combine(
-                    Environment.CurrentDirectory, @"..\..\..\Development.json"), true)
+                    Environment.CurrentDirectory, @"Development.json"), true)
                 .Build();
 
             _alpacaKeyId = configuration["LIVE_ALPACA_KEY_ID"] ?? Guid.NewGuid().ToString("N");

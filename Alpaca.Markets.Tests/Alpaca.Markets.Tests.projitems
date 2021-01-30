@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4fc08caa-bf56-4176-ba0c-739dc65f13b3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Alpaca.Markets.Tests</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataStreamingClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaStreamingClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.Orders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.WatchList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientsFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PolygonDataClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PolygonStreamingClientTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
