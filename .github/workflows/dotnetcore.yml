@@ -19,14 +19,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.402
-
-    - name: Dotnet Build
+    - name: Run All Tests
       env:
         LIVE_ALPACA_KEY_ID: ${{ secrets.LIVE_ALPACA_KEY_ID }}
         PAPER_ALPACA_KEY_ID: ${{ secrets.PAPER_ALPACA_KEY_ID }}
         PAPER_ALPACA_SECRET_KEY: ${{ secrets.PAPER_ALPACA_SECRET_KEY }}
-      run: dotnet test -f netcoreapp3.0
+      run: dotnet test -c Release
