@@ -31,14 +31,13 @@ namespace Alpaca.Markets.Tests
 
             var waitObject = new AutoResetEvent(false);
 
-            client.TradeReceived += (trade) =>
+            var subscription = client.GetTradeSubscription(Symbol);
+            subscription.Received += (trade) =>
             {
                 Assert.Equal(Symbol, trade.Symbol);
                 waitObject.Set();
             };
-
-            waitObject.Reset();
-            client.SubscribeTrade(Symbol);
+            client.Subscribe(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -59,13 +58,14 @@ namespace Alpaca.Markets.Tests
             await client.ConnectAndAuthenticateAsync();
 
             var waitObject = new AutoResetEvent(false);
-            client.QuoteReceived += (quote) =>
+
+            var subscription = client.GetQuoteSubscription(Symbol);
+            subscription.Received += (quote) =>
             {
                 Assert.Equal(Symbol, quote.Symbol);
                 waitObject.Set();
             };
-
-            client.SubscribeQuote(Symbol);
+            client.Subscribe(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -86,13 +86,14 @@ namespace Alpaca.Markets.Tests
             await client.ConnectAndAuthenticateAsync();
 
             var waitObject = new AutoResetEvent(false);
-            client.SecondAggReceived += (agg) =>
+
+            var subscription = client.GetSecondAggSubscription(Symbol);
+            subscription.Received += (agg) =>
             {
                 Assert.Equal(Symbol, agg.Symbol);
                 waitObject.Set();
             };
-
-            client.SubscribeSecondAgg(Symbol);
+            client.Subscribe(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -113,13 +114,14 @@ namespace Alpaca.Markets.Tests
             await client.ConnectAndAuthenticateAsync();
 
             var waitObject = new AutoResetEvent(false);
-            client.MinuteAggReceived += (agg) =>
+
+            var subscription = client.GetMinuteAggSubscription(Symbol);
+            subscription.Received += (agg) =>
             {
                 Assert.Equal(Symbol, agg.Symbol);
                 waitObject.Set();
             };
-
-            client.SubscribeMinuteAgg(Symbol);
+            client.Subscribe(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -145,20 +147,21 @@ namespace Alpaca.Markets.Tests
                 new AutoResetEvent(false)
             };
 
-            client.TradeReceived += (trade) =>
+            var tradeSubscription = client.GetTradeSubscription(Symbol);
+            tradeSubscription.Received += (trade) =>
             {
                 Assert.Equal(Symbol, trade.Symbol);
                 waitObjects[0].Set();
             };
 
-            client.QuoteReceived += (quote) =>
+            var quoteSubscription = client.GetQuoteSubscription(Symbol);
+            quoteSubscription.Received += (quote) =>
             {
                 Assert.Equal(Symbol, quote.Symbol);
                 waitObjects[1].Set();
             };
 
-            client.SubscribeTrade(Symbol);
-            client.SubscribeQuote(Symbol);
+            client.Subscribe(tradeSubscription, quoteSubscription);
 
             if (await isCurrentSessionOpenAsync())
             {
