@@ -16,7 +16,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.Orders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.WatchList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientsFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PolygonDataClientTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PolygonStreamingClientTest.cs" />
   </ItemGroup>
 </Project>

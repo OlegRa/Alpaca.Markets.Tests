@@ -45,45 +45,6 @@ namespace Alpaca.Markets.Tests
         private SecretKey getSecretKey() => new SecretKey(_alpacaKeyId, _alpacaSecretKey);
     }
 
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    public sealed class LiveEnvironmentClientsFactoryFixture
-    {
-        private readonly String _alpacaKeyId;
-
-        private readonly String _alpacaSecretKey;
-
-        public LiveEnvironmentClientsFactoryFixture()
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddJsonFile(Path.Combine(
-                    Environment.CurrentDirectory, @"..\..\..\..\Development.json"), true)
-                .Build();
-
-            _alpacaKeyId = configuration["LIVE_ALPACA_KEY_ID"] ?? String.Empty;
-            _alpacaSecretKey = configuration["LIVE_ALPACA_SECRET_KEY"] ?? String.Empty;
-
-            if (String.IsNullOrEmpty(_alpacaKeyId))
-            {
-                _alpacaKeyId = Guid.NewGuid().ToString("N");
-            }
-        }
-
-        public Boolean LiveAlpacaIdDoesNotFound => String.IsNullOrEmpty(_alpacaSecretKey);
-
-        public IPolygonDataClient GetPolygonDataClient() =>
-            Environments.Live.GetPolygonDataClient(_alpacaKeyId);
-
-        public IPolygonStreamingClient GetPolygonStreamingClient() =>
-            Environments.Live.GetPolygonStreamingClient(_alpacaKeyId);
-
-        public IAlpacaTradingClient GetAlpacaTradingClient() =>
-            Environments.Live.GetAlpacaTradingClient(new SecretKey(_alpacaKeyId, _alpacaSecretKey));
-    }
-
     [CollectionDefinition("PaperEnvironment")]
     public sealed class PaperEnvironmentClientsFactoryCollection : ICollectionFixture<PaperEnvironmentClientsFactoryFixture> { }
-
-    [CollectionDefinition("LiveEnvironment")]
-    public sealed class LiveEnvironmentClientsFactoryCollection : ICollectionFixture<LiveEnvironmentClientsFactoryFixture> { }
 }
