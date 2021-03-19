@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+#pragma warning disable 618
 
 namespace Alpaca.Markets.Tests
 {
