@@ -45,8 +45,7 @@ namespace Alpaca.Markets.Tests
                     new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour)))
             {
                 Assert.NotNull(bar);
-                Assert.NotNull(bar.TimeUtc);
-                Assert.InRange(bar.TimeUtc.Value, from, into);
+                Assert.InRange(bar.TimeUtc, from, into);
             }
         }
 
@@ -146,9 +145,27 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
+        public async void GetLatestQuoteWorks()
+        {
+            var quote = await _alpacaDataClient.GetLatestQuoteAsync(Symbol);
+
+            Assert.NotNull(quote);
+            Assert.Equal(Symbol, quote.Symbol);
+        }
+
+        [Fact]
         public async void GetLastTradeWorks()
         {
             var trade = await _alpacaDataClient.GetLastTradeAsync(Symbol);
+
+            Assert.NotNull(trade);
+            Assert.Equal(Symbol, trade.Symbol);
+        }
+
+        [Fact]
+        public async void GetLatestTradeWorks()
+        {
+            var trade = await _alpacaDataClient.GetLatestTradeAsync(Symbol);
 
             Assert.NotNull(trade);
             Assert.Equal(Symbol, trade.Symbol);
