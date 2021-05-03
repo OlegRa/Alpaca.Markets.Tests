@@ -132,7 +132,8 @@ namespace Alpaca.Markets.Tests
             Assert.NotNull(dictionary);
             Assert.Equal(symbols.Count, dictionary.Count);
             Assert.Contains(symbols[0], dictionary);
-            Assert.Equal(10, dictionary[symbols[0]].Count);
+            Assert.All(dictionary, kvp => 
+                Assert.InRange(kvp.Value.Count, 0, 10));
         }
 
         [Fact]
