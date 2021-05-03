@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Alpaca.Markets.Extensions;
 using Xunit;
 #pragma warning disable 618
 
@@ -21,8 +23,8 @@ namespace Alpaca.Markets.Tests
             _alpacaDataClient = clientsFactory.GetAlpacaDataClient();
         }
 
-        [Fact(Skip="Doesn't work right now - server side issues.")]
-        public async void GetBarsWorks()
+        [Fact]
+        public async void ListHistoricalBarsWorks()
         {
             var into = (await getLastTradingDay()).Date;
             var from = into.AddDays(-5).Date;
@@ -35,7 +37,22 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
-        public async void GetHistoricalQuotesWorks()
+        public async void GetHistoricalBarsAsAsyncEnumerableWorks()
+        {
+            var into = (await getLastTradingDay()).Date;
+            var from = into.AddDays(-5).Date;
+            await foreach (var bar in _alpacaDataClient
+                .GetHistoricalBarsAsAsyncEnumerable(
+                    new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour)))
+            {
+                Assert.NotNull(bar);
+                Assert.NotNull(bar.TimeUtc);
+                Assert.InRange(bar.TimeUtc.Value, from, into);
+            }
+        }
+
+        [Fact]
+        public async void ListHistoricalQuotesWorks()
         {
             var into = (await getLastTradingDay()).Date;
             var from = into.AddDays(-3).Date;
@@ -48,7 +65,37 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
-        public async void GetHistoricalTradesWorks()
+        public async void GetHistoricalQuotesAsAsyncEnumerableWorks()
+        {
+            var into = (await getLastTradingDay()).Date;
+            var from = into.AddDays(-3).Date;
+
+            var count = 0;
+            var cancellationTokenSource = new CancellationTokenSource(
+                TimeSpan.FromSeconds(30));
+            try
+            {
+                await foreach (var quote in _alpacaDataClient
+                    .GetHistoricalQuotesAsAsyncEnumerable(
+                        new HistoricalQuotesRequest(Symbol, from, into))
+                    .WithCancellation(cancellationTokenSource.Token))
+                {
+                    Assert.NotNull(quote);
+                    Assert.NotNull(quote.TimestampUtc);
+                    Assert.InRange(quote.TimestampUtc.Value, from, into);
+                    ++count;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Assert.True(cancellationTokenSource.IsCancellationRequested);
+            }
+
+            Assert.NotEqual(0, count);
+        }
+
+        [Fact]
+        public async void ListHistoricalTradesWorks()
         {
             var into = (await getLastTradingDay()).Date;
             var from = into.AddDays(-3).Date;
@@ -61,6 +108,36 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
+        public async void GetLBarSetWorks()
+        {
+            var dictionary = await _alpacaDataClient.GetBarSetAsync(
+                new BarSetRequest(Symbol, TimeFrame.Day) { Limit = 10 });
+
+            Assert.NotNull(dictionary);
+            Assert.Contains(Symbol, dictionary);
+            Assert.Equal(10, dictionary[Symbol].Count);
+        }
+
+        [Fact]
+        public async void GetLBarSetForAllSymbolsWorks()
+        {
+            var assets = await _clientsFactory.GetAlpacaTradingClient()
+                .ListAssetsAsync(new AssetsRequest {AssetStatus = AssetStatus.Active});
+            var symbols = assets.Select(_ => _.Symbol).Take(100).ToList();
+                
+            var dictionary = await _alpacaDataClient.GetBarSetAsync(
+                new BarSetRequest(symbols, TimeFrame.Day)
+                {
+                    Limit = 10
+                });
+
+            Assert.NotNull(dictionary);
+            Assert.Equal(symbols.Count, dictionary.Count);
+            Assert.Contains(symbols[0], dictionary);
+            Assert.Equal(10, dictionary[symbols[0]].Count);
+        }
+
+        [Fact]
         public async void GetLastQuoteWorks()
         {
             var quote = await _alpacaDataClient.GetLastQuoteAsync(Symbol);
@@ -70,9 +147,27 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
+        public async void GetLatestQuoteWorks()
+        {
+            var quote = await _alpacaDataClient.GetLatestQuoteAsync(Symbol);
+
+            Assert.NotNull(quote);
+            Assert.Equal(Symbol, quote.Symbol);
+        }
+
+        [Fact]
         public async void GetLastTradeWorks()
         {
             var trade = await _alpacaDataClient.GetLastTradeAsync(Symbol);
+
+            Assert.NotNull(trade);
+            Assert.Equal(Symbol, trade.Symbol);
+        }
+
+        [Fact]
+        public async void GetLatestTradeWorks()
+        {
+            var trade = await _alpacaDataClient.GetLatestTradeAsync(Symbol);
 
             Assert.NotNull(trade);
             Assert.Equal(Symbol, trade.Symbol);

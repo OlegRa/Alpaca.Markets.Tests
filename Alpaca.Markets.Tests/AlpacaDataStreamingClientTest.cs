@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Alpaca.Markets.Extensions;
 using Xunit;
 #pragma warning disable 618
 
@@ -175,6 +177,36 @@ namespace Alpaca.Markets.Tests
             client.Unsubscribe(tradeSubscription, quoteSubscription);
 
             await client.DisconnectAsync();
+        }
+
+        [Fact]
+        public async Task AsyncEnumerableWorks()
+        {
+            using var client = _clientsFactory.GetAlpacaDataStreamingClient();
+
+            await client.ConnectAndAuthenticateAsync();
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(15));
+
+            await using var subscription = client.SubscribeTrade(Symbol);
+
+            if (await isCurrentSessionOpenAsync())
+            {
+                var atLeastOneTradeReceived = false;
+
+                await foreach (var trade in subscription
+                    .AsAsyncEnumerable(cancellationTokenSource.Token)
+                    .ConfigureAwait(false))
+                {
+                    atLeastOneTradeReceived = true;
+                    break;
+                }
+
+                Debug.Assert(atLeastOneTradeReceived);
+            }
+
+            await client.DisconnectAsync(CancellationToken.None);
         }
 
         public void Dispose() => _alpacaTradingClient?.Dispose();
