@@ -6,6 +6,7 @@ jobs:
   build:
     name: Build and Test
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
