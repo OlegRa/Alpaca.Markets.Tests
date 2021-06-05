@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Alpaca.Markets.Extensions;
@@ -71,7 +72,7 @@ namespace Alpaca.Markets.Tests
 
             var count = 0;
             var cancellationTokenSource = new CancellationTokenSource(
-                TimeSpan.FromSeconds(30));
+                TimeSpan.FromSeconds(90));
             try
             {
                 await foreach (var quote in _alpacaDataClient
@@ -85,6 +86,10 @@ namespace Alpaca.Markets.Tests
                 }
             }
             catch (OperationCanceledException)
+            {
+                Assert.True(cancellationTokenSource.IsCancellationRequested);
+            }
+            catch (WebException)
             {
                 Assert.True(cancellationTokenSource.IsCancellationRequested);
             }
