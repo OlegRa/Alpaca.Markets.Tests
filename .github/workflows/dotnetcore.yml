@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Cache NuGet Packages
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -25,7 +25,6 @@ jobs:
 
     - name: Run All Tests
       env:
-        LIVE_ALPACA_KEY_ID: ${{ secrets.LIVE_ALPACA_KEY_ID }}
         PAPER_ALPACA_KEY_ID: ${{ secrets.PAPER_ALPACA_KEY_ID }}
         PAPER_ALPACA_SECRET_KEY: ${{ secrets.PAPER_ALPACA_SECRET_KEY }}
       run: dotnet test -c ${{ matrix.os }}
