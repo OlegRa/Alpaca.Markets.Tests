@@ -90,7 +90,7 @@ namespace Alpaca.Markets.Tests
 
             var waitObject = new AutoResetEvent(false);
 
-            var subscription = client.GetMinuteAggSubscription(Symbol);
+            var subscription = client.GetMinuteBarSubscription(Symbol);
             subscription.Received += (agg) =>
             {
                 Assert.Equal(Symbol, agg.Symbol);
@@ -119,7 +119,7 @@ namespace Alpaca.Markets.Tests
 
             var waitObject = new AutoResetEvent(false);
 
-            var subscription = client.GetMinuteAggSubscription();
+            var subscription = client.GetMinuteBarSubscription();
             subscription.Received += (agg) =>
             {
                 Assert.Equal(Symbol, agg.Symbol);

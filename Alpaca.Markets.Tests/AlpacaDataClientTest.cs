@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Alpaca.Markets.Extensions;
 using Xunit;
-#pragma warning disable 618
 
 namespace Alpaca.Markets.Tests
 {
@@ -23,7 +23,7 @@ namespace Alpaca.Markets.Tests
             _alpacaDataClient = clientsFactory.GetAlpacaDataClient();
         }
 
-        [Fact]
+        [Fact(Skip="Doesn't work right now - server side issues.")]
         public async void ListHistoricalBarsWorks()
         {
             var into = (await getLastTradingDay()).Date;
@@ -46,8 +46,7 @@ namespace Alpaca.Markets.Tests
                     new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour)))
             {
                 Assert.NotNull(bar);
-                Assert.NotNull(bar.TimeUtc);
-                Assert.InRange(bar.TimeUtc.Value, from, into);
+                Assert.InRange(bar.TimeUtc, from, into);
             }
         }
 
@@ -64,6 +63,7 @@ namespace Alpaca.Markets.Tests
             Assert.NotEmpty(quotes.Items);
         }
 
+
         [Fact]
         public async void GetHistoricalQuotesAsAsyncEnumerableWorks()
         {
@@ -72,7 +72,7 @@ namespace Alpaca.Markets.Tests
 
             var count = 0;
             var cancellationTokenSource = new CancellationTokenSource(
-                TimeSpan.FromSeconds(30));
+                TimeSpan.FromSeconds(90));
             try
             {
                 await foreach (var quote in _alpacaDataClient
@@ -81,12 +81,15 @@ namespace Alpaca.Markets.Tests
                     .WithCancellation(cancellationTokenSource.Token))
                 {
                     Assert.NotNull(quote);
-                    Assert.NotNull(quote.TimestampUtc);
-                    Assert.InRange(quote.TimestampUtc.Value, from, into);
+                    Assert.InRange(quote.TimestampUtc, from, into);
                     ++count;
                 }
             }
             catch (OperationCanceledException)
+            {
+                Assert.True(cancellationTokenSource.IsCancellationRequested);
+            }
+            catch (WebException)
             {
                 Assert.True(cancellationTokenSource.IsCancellationRequested);
             }
@@ -108,61 +111,12 @@ namespace Alpaca.Markets.Tests
         }
 
         [Fact]
-        public async void GetLBarSetWorks()
-        {
-            var dictionary = await _alpacaDataClient.GetBarSetAsync(
-                new BarSetRequest(Symbol, TimeFrame.Day) { Limit = 10 });
-
-            Assert.NotNull(dictionary);
-            Assert.Contains(Symbol, dictionary);
-            Assert.Equal(10, dictionary[Symbol].Count);
-        }
-
-        [Fact]
-        public async void GetLBarSetForAllSymbolsWorks()
-        {
-            var assets = await _clientsFactory.GetAlpacaTradingClient()
-                .ListAssetsAsync(new AssetsRequest {AssetStatus = AssetStatus.Active});
-            var symbols = assets.Select(_ => _.Symbol).Take(100).ToList();
-                
-            var dictionary = await _alpacaDataClient.GetBarSetAsync(
-                new BarSetRequest(symbols, TimeFrame.Day)
-                {
-                    Limit = 10
-                });
-
-            Assert.NotNull(dictionary);
-            Assert.Equal(symbols.Count, dictionary.Count);
-            Assert.Contains(symbols[0], dictionary);
-            Assert.All(dictionary, kvp => 
-                Assert.InRange(kvp.Value.Count, 0, 10));
-        }
-
-        [Fact]
-        public async void GetLastQuoteWorks()
-        {
-            var quote = await _alpacaDataClient.GetLastQuoteAsync(Symbol);
-
-            Assert.NotNull(quote);
-            Assert.Equal(Symbol, quote.Symbol);
-        }
-
-        [Fact]
         public async void GetLatestQuoteWorks()
         {
             var quote = await _alpacaDataClient.GetLatestQuoteAsync(Symbol);
 
             Assert.NotNull(quote);
             Assert.Equal(Symbol, quote.Symbol);
-        }
-
-        [Fact]
-        public async void GetLastTradeWorks()
-        {
-            var trade = await _alpacaDataClient.GetLastTradeAsync(Symbol);
-
-            Assert.NotNull(trade);
-            Assert.Equal(Symbol, trade.Symbol);
         }
 
         [Fact]

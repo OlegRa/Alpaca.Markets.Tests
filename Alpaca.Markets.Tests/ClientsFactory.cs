@@ -21,8 +21,13 @@ namespace Alpaca.Markets.Tests
                     Environment.CurrentDirectory, @"..\..\..\..\Development.json"), true)
                 .Build();
 
-            _alpacaKeyId = configuration["PAPER_ALPACA_KEY_ID"] ?? Guid.NewGuid().ToString("N");
+            _alpacaKeyId = configuration["PAPER_ALPACA_KEY_ID"] ?? String.Empty;
             _alpacaSecretKey = configuration["PAPER_ALPACA_SECRET_KEY"] ?? String.Empty;
+
+            if (String.IsNullOrEmpty(_alpacaKeyId))
+            {
+                _alpacaKeyId = Guid.NewGuid().ToString("N");
+            }
         }
 
         public IAlpacaDataClient GetAlpacaDataClient() =>
