@@ -17,22 +17,30 @@ namespace Alpaca.Markets.Tests
         {
             using var client = _clientsFactory.GetAlpacaStreamingClient();
 
-            client.OnError += (ex) =>
+            static void HandleOnError(Exception ex)
             {
                 Assert.Null(ex.Message);
-            };
+            }
+
+            client.OnError += HandleOnError;
 
             await client.ConnectAsync();
 
             var waitObject = new AutoResetEvent(false);
-            client.Connected += (status) =>
+
+            void HandleOnConnected(AuthStatus status)
             {
                 Assert.Equal(AuthStatus.Authorized, status);
                 waitObject.Set();
-            };
+            }
+
+            client.Connected += HandleOnConnected;
 
             Assert.True(waitObject.WaitOne(
                 TimeSpan.FromSeconds(10)));
+
+            client.Connected -= HandleOnConnected;
+            client.OnError -= HandleOnError;
 
             await client.DisconnectAsync();
         }
