@@ -23,13 +23,39 @@ namespace Alpaca.Markets.Tests
             _alpacaDataClient = clientsFactory.GetAlpacaDataClient();
         }
 
-        [Fact(Skip="Doesn't work right now - server side issues.")]
-        public async void ListHistoricalBarsWorks()
+        [Fact]
+        public async void ListDayHistoricalBarsWorks()
         {
             var into = (await getLastTradingDay()).Date;
             var from = into.AddDays(-5).Date;
             var bars = await _alpacaDataClient.ListHistoricalBarsAsync(
+                new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Day));
+
+            Assert.NotNull(bars);
+            Assert.NotNull(bars.Items);
+            Assert.NotEmpty(bars.Items);
+        }
+
+        [Fact]
+        public async void ListHourHistoricalBarsWorks()
+        {
+            var into = await getLastTradingDay();
+            var from = into.AddHours(-5);
+            var bars = await _alpacaDataClient.ListHistoricalBarsAsync(
                 new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour));
+
+            Assert.NotNull(bars);
+            Assert.NotNull(bars.Items);
+            Assert.NotEmpty(bars.Items);
+        }
+
+        [Fact]
+        public async void ListMinuteHistoricalBarsWorks()
+        {
+            var into = await getLastTradingDay();
+            var from = into.AddMinutes(-25);
+            var bars = await _alpacaDataClient.ListHistoricalBarsAsync(
+                new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Minute));
 
             Assert.NotNull(bars);
             Assert.NotNull(bars.Items);
