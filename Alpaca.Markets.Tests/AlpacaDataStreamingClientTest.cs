@@ -39,7 +39,7 @@ namespace Alpaca.Markets.Tests
                 waitObject.Set();
             };
 
-            client.Subscribe(subscription);
+            await client.SubscribeAsync(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -47,7 +47,7 @@ namespace Alpaca.Markets.Tests
                     TimeSpan.FromSeconds(10)));
             }
 
-            client.Unsubscribe(subscription);
+            await client.UnsubscribeAsync(subscription);
 
             await client.DisconnectAsync();
         }
@@ -68,7 +68,7 @@ namespace Alpaca.Markets.Tests
                 waitObject.Set();
             };
 
-            client.Subscribe(subscription);
+            await client.SubscribeAsync(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -76,7 +76,7 @@ namespace Alpaca.Markets.Tests
                     TimeSpan.FromSeconds(10)));
             }
 
-            client.Unsubscribe(subscription);
+            await client.UnsubscribeAsync(subscription);
 
             await client.DisconnectAsync();
         }
@@ -97,7 +97,7 @@ namespace Alpaca.Markets.Tests
                 waitObject.Set();
             };
 
-            client.Subscribe(subscription);
+            await client.SubscribeAsync(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -105,7 +105,7 @@ namespace Alpaca.Markets.Tests
                     TimeSpan.FromMinutes(2)));
             }
 
-            client.Unsubscribe(subscription);
+            await client.UnsubscribeAsync(subscription);
 
             await client.DisconnectAsync();
         }
@@ -126,7 +126,7 @@ namespace Alpaca.Markets.Tests
                 waitObject.Set();
             };
 
-            client.Subscribe(subscription);
+            await client.SubscribeAsync(subscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -134,7 +134,7 @@ namespace Alpaca.Markets.Tests
                     TimeSpan.FromMinutes(2)));
             }
 
-            client.Unsubscribe(subscription);
+            await client.UnsubscribeAsync(subscription);
 
             await client.DisconnectAsync();
         }
@@ -146,7 +146,7 @@ namespace Alpaca.Markets.Tests
 
             await client.ConnectAndAuthenticateAsync();
 
-            var waitObjects = new []
+            var waitObjects = new[]
             {
                 new AutoResetEvent(false),
                 new AutoResetEvent(false)
@@ -166,7 +166,7 @@ namespace Alpaca.Markets.Tests
                 waitObjects[1].Set();
             };
 
-            client.Subscribe(tradeSubscription, quoteSubscription);
+            await client.SubscribeAsync(tradeSubscription, quoteSubscription);
 
             if (await isCurrentSessionOpenAsync())
             {
@@ -174,7 +174,7 @@ namespace Alpaca.Markets.Tests
                 Assert.True(WaitHandle.WaitAll(
                     waitObjects, TimeSpan.FromSeconds(10)));
             }
-            client.Unsubscribe(tradeSubscription, quoteSubscription);
+            await client.UnsubscribeAsync(tradeSubscription, quoteSubscription);
 
             await client.DisconnectAsync();
         }
@@ -189,21 +189,23 @@ namespace Alpaca.Markets.Tests
             var cancellationTokenSource = new CancellationTokenSource();
             cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(15));
 
-            await using var subscription = client.SubscribeTrade(Symbol);
-
-            if (await isCurrentSessionOpenAsync())
+            var subscription = await client.SubscribeTradeAsync(Symbol);
+            await using (subscription.ConfigureAwait(false))
             {
-                var atLeastOneTradeReceived = false;
-
-                await foreach (var trade in subscription
-                    .AsAsyncEnumerable(cancellationTokenSource.Token)
-                    .ConfigureAwait(false))
+                if (await isCurrentSessionOpenAsync())
                 {
-                    atLeastOneTradeReceived = true;
-                    break;
-                }
+                    var atLeastOneTradeReceived = false;
 
-                Debug.Assert(atLeastOneTradeReceived);
+                    await foreach (var _ in subscription
+                        .AsAsyncEnumerable(cancellationTokenSource.Token)
+                        .ConfigureAwait(false))
+                    {
+                        atLeastOneTradeReceived = true;
+                        break;
+                    }
+
+                    Debug.Assert(atLeastOneTradeReceived);
+                }
             }
 
             await client.DisconnectAsync(CancellationToken.None);

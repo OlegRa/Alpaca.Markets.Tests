@@ -11,21 +11,26 @@ namespace Alpaca.Markets.Tests
         {
             using var sockClient = _clientsFactory.GetAlpacaStreamingClient();
 
-            sockClient.OnError += (ex) =>
+            static void HandleOnError(Exception ex)
             {
                 Assert.Null(ex.Message);
-            };
+            }
+
+            sockClient.OnError += HandleOnError;
 
             await sockClient.ConnectAsync();
 
             var waitObject = new AutoResetEvent(false);
-            sockClient.OnTradeUpdate += (update) =>
+
+            void HandleOnTradeUpdate(ITradeUpdate update)
             {
                 Assert.NotNull(update);
                 Assert.NotNull(update.Order);
                 Assert.Equal(Symbol, update.Order.Symbol);
                 waitObject.Set();
-            };
+            }
+
+            sockClient.OnTradeUpdate += HandleOnTradeUpdate;
 
             var clientOrderId = Guid.NewGuid().ToString("N");
 
@@ -55,6 +60,9 @@ namespace Alpaca.Markets.Tests
 
             Assert.True(waitObject.WaitOne(
                 TimeSpan.FromSeconds(10)));
+
+            sockClient.OnTradeUpdate -= HandleOnTradeUpdate;
+            sockClient.OnError -= HandleOnError;
 
             await sockClient.DisconnectAsync();
         }
