@@ -159,10 +159,10 @@ namespace Alpaca.Markets.Tests
             using var alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
 
             var calendars = await alpacaTradingClient
-                .ListCalendarAsync(new CalendarRequest()
-                    .SetInclusiveTimeInterval(
-                        DateTime.UtcNow.Date.AddDays(-14),
-                        DateTime.UtcNow.Date.AddDays(-1)));
+                .ListCalendarAsync(new CalendarRequest().WithInterval(
+                    new Interval<DateOnly>(
+                        DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
+                        DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-1)))));
 
             Assert.NotNull(calendars);
 

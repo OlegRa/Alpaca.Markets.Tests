@@ -161,9 +161,10 @@ namespace Alpaca.Markets.Tests
         public async void ListCalendarWorks()
         {
             var calendars = await _alpacaTradingClient.ListCalendarAsync(
-                new CalendarRequest().SetInclusiveTimeInterval(
-                    DateTime.Today.AddDays(-14),
-                    DateTime.Today.AddDays(14)));
+                new CalendarRequest().WithInterval(
+                    new Interval<DateOnly>(
+                        DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
+                        DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(14)))));
 
             Assert.NotNull(calendars);
 
@@ -196,8 +197,8 @@ namespace Alpaca.Markets.Tests
         public async void ListOrdersForDatesWorks()
         {
             var orders = await _alpacaTradingClient.ListOrdersAsync(
-                new ListOrdersRequest().SetTimeInterval(
-                    DateTime.Today.AddDays(-5).GetExclusiveIntervalTillThat()));
+                new ListOrdersRequest().WithInterval(
+                    DateTime.Today.AddDays(-5).GetIntervalTillThat()));
 
             Assert.NotNull(orders);
             // Assert.NotEmpty(orders);

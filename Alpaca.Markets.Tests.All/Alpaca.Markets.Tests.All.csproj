@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net5</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5;net6</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alpaca.Markets" Version="5.2.2" />
-    <PackageReference Include="Alpaca.Markets.Extensions" Version="5.2.1" />
+    <PackageReference Include="Alpaca.Markets" Version="6.0.2-alpha2" />
+    <PackageReference Include="Alpaca.Markets.Extensions" Version="6.0.2-alpha1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
