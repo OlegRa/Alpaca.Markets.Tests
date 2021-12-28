@@ -3,8 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>net461;net462;net47;net471;net472;net48</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <WarningLevel>5</WarningLevel>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 

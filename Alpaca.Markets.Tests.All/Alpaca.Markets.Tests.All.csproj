@@ -3,8 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net5;net6</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <WarningLevel>5</WarningLevel>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 
