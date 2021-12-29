@@ -51,12 +51,20 @@ jobs:
     needs: build
 
     steps:
+    - name: Checkout Sources
+      uses: actions/checkout@v2
+      with:
+        repository: alpacahq/alpaca-trade-api-csharp
+        path: Alpaca.Markets
+
     - name: Load Report
       uses: actions/download-artifact@v2
       with:
         name: coverage-report
+        path: Alpaca.Markets
 
     - name: Send to Codacy
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r Alpaca.Markets.Coverage.xml
+      working-directory: ./Alpaca.Markets
