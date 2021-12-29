@@ -19,11 +19,6 @@ jobs:
         repository: alpacahq/alpaca-trade-api-csharp
         path: Alpaca.Markets
 
-    - name: Remove NuGet Lock File
-      uses: JesseTG/rm@v1.0.2
-      with:
-        path: ./Alpaca.Markets/Alpaca.Markets.Extensions/packages.lock.json
-
     - name: Setup .NET 6.0.x
       uses: actions/setup-dotnet@v1
       with:
@@ -32,6 +27,10 @@ jobs:
     - name: Restore .NET Tools
       run: dotnet tool restore
       working-directory: ./Alpaca.Markets.Tests
+
+    - name: Restore NuGet Packages
+      run: dotnet restore --force-evaluate
+      working-directory: ./Alpaca.Markets.Tests/Alpaca.Markets.Coverage
 
     - name: Coverage All Tests
       env:
