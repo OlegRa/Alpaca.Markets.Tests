@@ -42,4 +42,4 @@ jobs:
       env:
         PAPER_ALPACA_KEY_ID: ${{ secrets.PAPER_ALPACA_KEY_ID }}
         PAPER_ALPACA_SECRET_KEY: ${{ secrets.PAPER_ALPACA_SECRET_KEY }}
-      run: dotnet test -c ${{ matrix.os }}
+      run: dotnet test -c ${{ matrix.os }} Alpaca.Markets.Tests.sln

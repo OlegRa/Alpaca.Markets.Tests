@@ -3,6 +3,9 @@
   <Filters>
     <IncludeFilters>
       <FilterEntry>
+        <ModuleMask>Alpaca.Markets.Extensions</ModuleMask>
+      </FilterEntry>
+      <FilterEntry>
         <ModuleMask>Alpaca.Markets</ModuleMask>
       </FilterEntry>
     </IncludeFilters>

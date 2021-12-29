@@ -3,17 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Coverage", "Alpaca.Markets.Coverage.csproj", "{DFEFBC34-E923-4224-9775-EF9BCFE6D7FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Coverage", "Alpaca.Markets.Coverage\Alpaca.Markets.Coverage.csproj", "{DFEFBC34-E923-4224-9775-EF9BCFE6D7FC}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Alpaca.Markets.Tests", "..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.shproj", "{4FC08CAA-BF56-4176-BA0C-739DC65F13B3}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Alpaca.Markets.Tests", "Alpaca.Markets.Tests\Alpaca.Markets.Tests.shproj", "{4FC08CAA-BF56-4176-BA0C-739DC65F13B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets", "..\..\Alpaca.Markets\Alpaca.Markets\Alpaca.Markets.csproj", "{F42152FC-74CB-43BE-95C2-058BF618E536}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets", "..\Alpaca.Markets\Alpaca.Markets\Alpaca.Markets.csproj", "{F42152FC-74CB-43BE-95C2-058BF618E536}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Extensions", "..\..\Alpaca.Markets\Alpaca.Markets.Extensions\Alpaca.Markets.Extensions.csproj", "{D3120C6F-29E6-4F19-B05B-08F758753716}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Extensions", "..\Alpaca.Markets\Alpaca.Markets.Extensions\Alpaca.Markets.Extensions.csproj", "{D3120C6F-29E6-4F19-B05B-08F758753716}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Extensions.Coverage", "Alpaca.Markets.Extensions.Coverage\Alpaca.Markets.Extensions.Coverage.csproj", "{C96B2AFA-2E76-46B1-8405-8121F9358355}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{4fc08caa-bf56-4176-ba0c-739dc65f13b3}*SharedItemsImports = 13
+		..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{c96b2afa-2e76-46b1-8405-8121f9358355}*SharedItemsImports = 5
 		..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{dfefbc34-e923-4224-9775-ef9bcfe6d7fc}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +36,10 @@ Global
 		{D3120C6F-29E6-4F19-B05B-08F758753716}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3120C6F-29E6-4F19-B05B-08F758753716}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3120C6F-29E6-4F19-B05B-08F758753716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C96B2AFA-2E76-46B1-8405-8121F9358355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C96B2AFA-2E76-46B1-8405-8121F9358355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C96B2AFA-2E76-46B1-8405-8121F9358355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C96B2AFA-2E76-46B1-8405-8121F9358355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
