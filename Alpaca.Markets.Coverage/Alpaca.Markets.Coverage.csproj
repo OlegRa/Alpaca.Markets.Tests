@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net462;net47;net471;net472;net48</TargetFrameworks>
-    <DefineConstants>$(DefineConstants);EXTENSIONS</DefineConstants>
+    <TargetFrameworks>net6</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -12,8 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alpaca.Markets" Version="6.0.2-alpha4" />
-    <PackageReference Include="Alpaca.Markets.Extensions" Version="6.0.2-alpha2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
@@ -26,6 +23,10 @@
     </PackageReference>
     <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Alpaca.Markets\Alpaca.Markets\Alpaca.Markets.csproj" />
   </ItemGroup>
 
   <Import Project="..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems" Label="Shared" />

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using Xunit;
-
-namespace Alpaca.Markets.Tests;
+﻿namespace Alpaca.Markets.Tests;
 
 [Collection("PaperEnvironment")]
 public sealed class AlpacaStreamingClientTest

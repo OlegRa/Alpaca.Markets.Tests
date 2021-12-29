@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net5;net6</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);EXTENSIONS</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -9,13 +10,6 @@
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-
-  <ItemGroup>
-    <Compile Update="AlpacaTradingClientTest.*.cs">
-      <DependentUpon>AlpacaTradingClientTest.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="6.0.2-alpha4" />

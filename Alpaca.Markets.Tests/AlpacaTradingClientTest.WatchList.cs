@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using Xunit;
-
-namespace Alpaca.Markets.Tests;
+﻿namespace Alpaca.Markets.Tests;
 
 public sealed partial class AlpacaTradingClientTest
 {

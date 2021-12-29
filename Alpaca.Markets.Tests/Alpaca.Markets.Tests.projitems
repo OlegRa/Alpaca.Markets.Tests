@@ -10,11 +10,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataClientTest.Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataStreamingClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataStreamingClientTest.Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaStreamingClientTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.Orders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.WatchList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientsFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globals.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="AlpacaDataClientTest.*.cs">
+      <DependentUpon>AlpacaDataClientTest.cs</DependentUpon>
+    </Compile>
+    <Compile Update="AlpacaTradingClientTest.*.cs">
+      <DependentUpon>AlpacaTradingClientTest.cs</DependentUpon>
+    </Compile>
+    <Compile Update="AlpacaDataStreamingClientTest.*.cs">
+      <DependentUpon>AlpacaDataStreamingClientTest.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
