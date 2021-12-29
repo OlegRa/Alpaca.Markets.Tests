@@ -42,5 +42,21 @@ jobs:
     - name: Save Report
       uses: actions/upload-artifact@v2
       with:
-        name: coverage
-        path: Alpaca.Markets.Coverage.xml
+        name: coverage-report
+        path: Alpaca.Markets.Tests/Alpaca.Markets.Coverage.xml
+
+  publish:
+    name: Publish Report
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Load Report
+      uses: actions/download-artifact@v2
+      with:
+        name: coverage-report
+
+    - name: Send to Codacy
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r Alpaca.Markets.Coverage.xml
