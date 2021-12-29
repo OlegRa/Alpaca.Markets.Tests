@@ -32,7 +32,7 @@ jobs:
       env:
         PAPER_ALPACA_KEY_ID: ${{ secrets.PAPER_ALPACA_KEY_ID }}
         PAPER_ALPACA_SECRET_KEY: ${{ secrets.PAPER_ALPACA_SECRET_KEY }}
-      run: dotnet dotcover test --dcXML=../Configuration.xml
+      run: dotnet dotcover test --dcXML=../Configuration.xml --force-evaluate
       working-directory: ./Alpaca.Markets.Tests/Alpaca.Markets.Coverage
 
     - name: Save Report
