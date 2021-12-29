@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: alpacahq/alpaca-trade-api-csharp
-        path: Alpaca.Markets
+        path: ../Alpaca.Markets
 
     - name: Setup .NET 6.0.x
       uses: actions/setup-dotnet@v1
