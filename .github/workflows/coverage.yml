@@ -29,8 +29,8 @@ jobs:
       working-directory: ./Alpaca.Markets.Tests
 
     - name: Restore NuGet Packages
-      run: dotnet restore --force-evaluate
-      working-directory: ./Alpaca.Markets.Tests Alpaca.Markets.Coverage.sln
+      run: dotnet restore --force-evaluate Alpaca.Markets.Coverage.sln
+      working-directory: ./Alpaca.Markets.Tests
 
     - name: Coverage All Tests
       env:

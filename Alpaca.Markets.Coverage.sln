@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Extensions.C
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{4fc08caa-bf56-4176-ba0c-739dc65f13b3}*SharedItemsImports = 13
-		..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{c96b2afa-2e76-46b1-8405-8121f9358355}*SharedItemsImports = 5
-		..\Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{dfefbc34-e923-4224-9775-ef9bcfe6d7fc}*SharedItemsImports = 5
+		Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{4fc08caa-bf56-4176-ba0c-739dc65f13b3}*SharedItemsImports = 13
+		Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{c96b2afa-2e76-46b1-8405-8121f9358355}*SharedItemsImports = 5
+		Alpaca.Markets.Tests\Alpaca.Markets.Tests.projitems*{dfefbc34-e923-4224-9775-ef9bcfe6d7fc}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
