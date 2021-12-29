@@ -57,9 +57,10 @@ jobs:
         repository: alpacahq/alpaca-trade-api-csharp
         path: Alpaca.Markets
 
-    - id: get-sha
-        run: echo "::set-output name=sha::$(git log -1 --format=%H)"
+    - name: Get Commit UUID
+      run: echo "::set-output name=sha::$(git log -1 --format=%H)"
       working-directory: ./Alpaca.Markets
+      id: get-uuid
 
     - name: Load Report
       uses: actions/download-artifact@v2
@@ -70,5 +71,5 @@ jobs:
     - name: Send to Codacy
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-      run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r Alpaca.Markets.Coverage.xml --commit-uuid ${{ steps.get-sha.outputs.sha }}
+      run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r Alpaca.Markets.Coverage.xml --commit-uuid ${{ steps.get-uuid.outputs.sha }}
       working-directory: ./Alpaca.Markets
