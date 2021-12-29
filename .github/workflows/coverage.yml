@@ -66,5 +66,5 @@ jobs:
     - name: Send to Codacy
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-      run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r Alpaca.Markets.Coverage.xml
+      run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r Alpaca.Markets.Coverage.xml --commit-uuid <(git rev-parse HEAD)
       working-directory: ./Alpaca.Markets

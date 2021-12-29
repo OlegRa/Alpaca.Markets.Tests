@@ -8,5 +8,5 @@
     </IncludeFilters>
   </Filters>
   <Output>Alpaca.Markets.Coverage.xml</Output>
-  <ReportType>xml</ReportType>
+  <ReportType>DetailedXml</ReportType>
 </CoverageParams>
