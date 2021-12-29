@@ -30,7 +30,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
 
-    - name: Run All Tests
+    - name: Restore .NET Tools
+      run: dotnet tool restore
+
+    - name: Coverage All Tests
       env:
         PAPER_ALPACA_KEY_ID: ${{ secrets.PAPER_ALPACA_KEY_ID }}
         PAPER_ALPACA_SECRET_KEY: ${{ secrets.PAPER_ALPACA_SECRET_KEY }}
