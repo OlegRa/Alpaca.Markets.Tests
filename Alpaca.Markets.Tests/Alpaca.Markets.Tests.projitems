@@ -9,6 +9,10 @@
     <Import_RootNamespace>Alpaca.Markets.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaCryptoDataClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaCryptoDataClientTest.Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaCryptoStreamingClientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlpacaCryptoStreamingClientTest.Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataClientTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataClientTest.Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaDataStreamingClientTest.cs" />
@@ -27,8 +31,14 @@
     <Compile Update="AlpacaTradingClientTest.*.cs">
       <DependentUpon>AlpacaTradingClientTest.cs</DependentUpon>
     </Compile>
+    <Compile Update="AlpacaCryptoDataClientTest.*.cs">
+      <DependentUpon>AlpacaCryptoDataClientTest.cs</DependentUpon>
+    </Compile>
     <Compile Update="AlpacaDataStreamingClientTest.*.cs">
       <DependentUpon>AlpacaDataStreamingClientTest.cs</DependentUpon>
+    </Compile>
+    <Compile Update="AlpacaCryptoStreamingClientTest.*.cs">
+      <DependentUpon>AlpacaCryptoStreamingClientTest.cs</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

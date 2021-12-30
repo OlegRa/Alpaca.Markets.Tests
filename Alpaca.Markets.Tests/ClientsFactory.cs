@@ -35,8 +35,14 @@ public sealed class PaperEnvironmentClientsFactoryFixture
     public IAlpacaStreamingClient GetAlpacaStreamingClient() =>
         Environments.Paper.GetAlpacaStreamingClient(getSecretKey());
 
+    public IAlpacaCryptoDataClient GetAlpacaCryptoDataClient() =>
+        Environments.Paper.GetAlpacaCryptoDataClient(getSecretKey());
+
     public IAlpacaDataStreamingClient GetAlpacaDataStreamingClient() =>
         Environments.Paper.GetAlpacaDataStreamingClient(getSecretKey());
+
+    public IAlpacaCryptoStreamingClient GetAlpacaCryptoStreamingClient() =>
+        Environments.Paper.GetAlpacaCryptoStreamingClient(getSecretKey());
 
     private SecretKey getSecretKey() => new (_alpacaKeyId, _alpacaSecretKey);
 }
