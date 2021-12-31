@@ -16,6 +16,7 @@ public sealed partial class AlpacaTradingClientTest
 
         Assert.NotNull(newWatchList);
         Assert.Equal(newWatchListName, newWatchList.Name);
+        Assert.NotEqual(newWatchList.AccountId, Guid.Empty);
 
         var updatedWatchList = await _alpacaTradingClient.GetWatchListByIdAsync(
             newWatchList.WatchListId);

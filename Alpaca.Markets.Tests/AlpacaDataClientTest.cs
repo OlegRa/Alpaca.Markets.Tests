@@ -1,3 +1,5 @@
+using NuGet.Frameworks;
+
 namespace Alpaca.Markets.Tests;
 
 [Collection("PaperEnvironment")]
@@ -87,6 +89,17 @@ public sealed partial class AlpacaDataClientTest : IDisposable
 
         Assert.NotNull(quote);
         Assert.Equal(Symbol, quote.Symbol);
+        Assert.True(quote.TimestampUtc <= DateTime.UtcNow);
+
+        Assert.NotNull(quote.Tape);
+        Assert.NotNull(quote.Conditions);
+        Assert.NotNull(quote.AskExchange);
+        Assert.NotNull(quote.BidExchange);
+
+        Assert.NotEqual(0, quote.AskPrice);
+        Assert.NotEqual(0, quote.BidPrice);
+        Assert.NotEqual(0, quote.AskSize);
+        Assert.NotEqual(0, quote.BidSize);
     }
 
     [Fact]

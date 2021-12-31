@@ -22,6 +22,17 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
 
         Assert.NotNull(portfolioHistory);
         Assert.NotNull(portfolioHistory.Items);
+
+        var lastTimestamp = DateTime.MinValue;
+        foreach (var item in portfolioHistory.Items)
+        {
+            Assert.NotNull(item.Equity);
+            Assert.NotNull(item.ProfitLoss);
+            Assert.NotNull(item.ProfitLossPercentage);
+            
+            Assert.True(lastTimestamp < item.TimestampUtc);
+            lastTimestamp = item.TimestampUtc;
+        }
     }
 
     [Fact]
@@ -162,17 +173,18 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
                     DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(14)))));
 
         Assert.NotNull(calendars);
+        Assert.NotEmpty(calendars);
 
-        var calendarsList = calendars.ToList();
+        var first = calendars[0];
+        var last = calendars[^1];
 
-        Assert.NotEmpty(calendarsList);
-
-        var first = calendarsList.First();
-        var last = calendarsList.Last();
-
+        Assert.True(first.TradingDate <= last.TradingDate);
         Assert.True(first.TradingDateUtc <= last.TradingDateUtc);
         Assert.True(first.TradingOpenTimeUtc < first.TradingCloseTimeUtc);
         Assert.True(last.TradingOpenTimeUtc < last.TradingCloseTimeUtc);
+
+        Assert.True(first.OpenTimeEst < first.CloseTimeEst);
+        Assert.True(last.OpenTimeUtc < last.CloseTimeUtc);
     }
 
     [Fact(Skip = "Run too long and sometimes fail")]

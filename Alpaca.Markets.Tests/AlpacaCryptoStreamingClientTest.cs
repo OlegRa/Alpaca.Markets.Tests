@@ -4,7 +4,7 @@
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
 public sealed partial class AlpacaCryptoStreamingClientTest
 {
-    private const String Symbol = "ETHUSD";
+    private const String Symbol = "BTCUSD";
 
     private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
@@ -32,7 +32,7 @@ public sealed partial class AlpacaCryptoStreamingClientTest
         await client.SubscribeAsync(subscription);
 
         Assert.True(waitObject.WaitOne(
-            TimeSpan.FromSeconds(10)));
+            TimeSpan.FromSeconds(30)));
 
         await client.UnsubscribeAsync(subscription);
 
