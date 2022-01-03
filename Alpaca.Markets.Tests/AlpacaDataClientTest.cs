@@ -1,5 +1,3 @@
-using NuGet.Frameworks;
-
 namespace Alpaca.Markets.Tests;
 
 [Collection("PaperEnvironment")]
