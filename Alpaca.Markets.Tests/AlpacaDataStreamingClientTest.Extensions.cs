@@ -7,9 +7,11 @@ namespace Alpaca.Markets.Tests;
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
 public sealed partial class AlpacaDataStreamingClientTest
 {
-    [Fact]
+    [SkippableFact]
     public async Task SeveralSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaDataStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -36,20 +38,20 @@ public sealed partial class AlpacaDataStreamingClientTest
 
         await client.SubscribeAsync(tradeSubscription, quoteSubscription);
 
-        if (await isCurrentSessionOpenAsync())
-        {
-            // ReSharper disable once CoVariantArrayConversion
-            Assert.True(WaitHandle.WaitAll(
-                waitObjects, TimeSpan.FromSeconds(10)));
-        }
+        // ReSharper disable once CoVariantArrayConversion
+        Assert.True(WaitHandle.WaitAll(
+            waitObjects, TimeSpan.FromSeconds(10)));
+
         await client.UnsubscribeAsync(tradeSubscription, quoteSubscription);
 
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task AsyncEnumerableWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaDataStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -60,20 +62,17 @@ public sealed partial class AlpacaDataStreamingClientTest
         var subscription = await client.SubscribeTradeAsync(Symbol);
         await using (subscription.ConfigureAwait(false))
         {
-            if (await isCurrentSessionOpenAsync())
+            var atLeastOneTradeReceived = false;
+
+            await foreach (var _ in subscription
+                               .AsAsyncEnumerable(cancellationTokenSource.Token)
+                               .ConfigureAwait(false))
             {
-                var atLeastOneTradeReceived = false;
-
-                await foreach (var _ in subscription
-                                   .AsAsyncEnumerable(cancellationTokenSource.Token)
-                                   .ConfigureAwait(false))
-                {
-                    atLeastOneTradeReceived = true;
-                    break;
-                }
-
-                Assert.True(atLeastOneTradeReceived);
+                atLeastOneTradeReceived = true;
+                break;
             }
+
+            Assert.True(atLeastOneTradeReceived);
         }
 
         await client.DisconnectAsync(CancellationToken.None);

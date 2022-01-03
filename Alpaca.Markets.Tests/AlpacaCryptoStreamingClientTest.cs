@@ -2,20 +2,25 @@
 
 [Collection("PaperEnvironment")]
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
-public sealed partial class AlpacaCryptoStreamingClientTest
+public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
 {
     private const String Symbol = "BTCUSD";
 
     private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
+    private readonly IAlpacaTradingClient _alpacaTradingClient;
+
     public AlpacaCryptoStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
     {
         _clientsFactory = clientsFactory;
+        _alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task TradesSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -39,9 +44,11 @@ public sealed partial class AlpacaCryptoStreamingClientTest
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task QuotesSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -65,9 +72,11 @@ public sealed partial class AlpacaCryptoStreamingClientTest
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task MinuteAggSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -91,9 +100,11 @@ public sealed partial class AlpacaCryptoStreamingClientTest
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task AllMinuteAggSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -116,4 +127,9 @@ public sealed partial class AlpacaCryptoStreamingClientTest
 
         await client.DisconnectAsync();
     }
+
+    public void Dispose() => _alpacaTradingClient?.Dispose();
+
+    private async Task<Boolean> isCurrentSessionOpenAsync() => 
+        (await _alpacaTradingClient.GetClockAsync()).IsOpen;
 }

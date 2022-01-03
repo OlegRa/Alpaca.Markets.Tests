@@ -7,9 +7,11 @@ namespace Alpaca.Markets.Tests;
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
 public sealed partial class AlpacaCryptoStreamingClientTest
 {
-    [Fact]
+    [SkippableFact]
     public async Task SeveralSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -45,9 +47,11 @@ public sealed partial class AlpacaCryptoStreamingClientTest
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task AsyncEnumerableWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();

@@ -16,9 +16,11 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
         _alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task TradesSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaDataStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -34,20 +36,19 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
 
         await client.SubscribeAsync(subscription);
 
-        if (await isCurrentSessionOpenAsync())
-        {
-            Assert.True(waitObject.WaitOne(
-                TimeSpan.FromSeconds(10)));
-        }
+        Assert.True(waitObject.WaitOne(
+            TimeSpan.FromSeconds(10)));
 
         await client.UnsubscribeAsync(subscription);
 
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task QuotesSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaDataStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -63,20 +64,19 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
 
         await client.SubscribeAsync(subscription);
 
-        if (await isCurrentSessionOpenAsync())
-        {
-            Assert.True(waitObject.WaitOne(
-                TimeSpan.FromSeconds(10)));
-        }
+        Assert.True(waitObject.WaitOne(
+            TimeSpan.FromSeconds(10)));
 
         await client.UnsubscribeAsync(subscription);
 
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task MinuteAggSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaDataStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -92,20 +92,19 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
 
         await client.SubscribeAsync(subscription);
 
-        if (await isCurrentSessionOpenAsync())
-        {
-            Assert.True(waitObject.WaitOne(
-                TimeSpan.FromMinutes(2)));
-        }
+        Assert.True(waitObject.WaitOne(
+            TimeSpan.FromMinutes(2)));
 
         await client.UnsubscribeAsync(subscription);
 
         await client.DisconnectAsync();
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task AllMinuteAggSubscriptionWorks()
     {
+        Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
+
         using var client = _clientsFactory.GetAlpacaDataStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
@@ -121,11 +120,8 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
 
         await client.SubscribeAsync(subscription);
 
-        if (await isCurrentSessionOpenAsync())
-        {
-            Assert.True(waitObject.WaitOne(
-                TimeSpan.FromMinutes(2)));
-        }
+        Assert.True(waitObject.WaitOne(
+            TimeSpan.FromMinutes(2)));
 
         await client.UnsubscribeAsync(subscription);
 
@@ -134,8 +130,6 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
 
     public void Dispose() => _alpacaTradingClient?.Dispose();
 
-    private async Task<Boolean> isCurrentSessionOpenAsync()
-    {
-        return (await _alpacaTradingClient.GetClockAsync()).IsOpen;
-    }
+    private async Task<Boolean> isCurrentSessionOpenAsync() => 
+        (await _alpacaTradingClient.GetClockAsync()).IsOpen;
 }
