@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="6.0.2-beta1" />
-    <PackageReference Include="Alpaca.Markets.Extensions" Version="6.0.2-alpha2" />
+    <PackageReference Include="Alpaca.Markets.Extensions" Version="6.0.2-beta1" />
     <PackageReference Include="IndexRange" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
