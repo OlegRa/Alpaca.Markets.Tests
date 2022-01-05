@@ -10,9 +10,9 @@ public sealed partial class AlpacaCryptoDataClientTest
     [Fact]
     public async void GetHistoricalBarsAsAsyncEnumerableWorks()
     {
-        var into = (await getLastTradingDay()).Date;
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
-        await foreach (var bar in _alpacaCryptoDataClient
+        await foreach (var bar in Client
                            .GetHistoricalBarsAsAsyncEnumerable(
                                new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Hour)))
         {
@@ -24,7 +24,7 @@ public sealed partial class AlpacaCryptoDataClientTest
     [Fact]
     public async void GetHistoricalQuotesAsAsyncEnumerableWorks()
     {
-        var into = (await getLastTradingDay()).Date;
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
 
         var count = 0;
@@ -32,7 +32,7 @@ public sealed partial class AlpacaCryptoDataClientTest
             TimeSpan.FromSeconds(15));
         try
         {
-            await foreach (var quote in _alpacaCryptoDataClient
+            await foreach (var quote in Client
                .GetHistoricalQuotesAsAsyncEnumerable(
                    new HistoricalCryptoQuotesRequest(Symbol, from, into), cancellationTokenSource.Token))
             {

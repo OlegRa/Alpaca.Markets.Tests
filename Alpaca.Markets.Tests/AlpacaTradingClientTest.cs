@@ -22,6 +22,7 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
 
         Assert.NotNull(portfolioHistory);
         Assert.NotNull(portfolioHistory.Items);
+        Assert.NotEqual(0M, portfolioHistory.BaseValue);
 
         var lastTimestamp = DateTime.MinValue;
         foreach (var item in portfolioHistory.Items)
@@ -138,7 +139,7 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
     public async void ListAssetsWorks()
     {
         var assets = await _alpacaTradingClient.ListAssetsAsync(
-            new AssetsRequest());
+            new AssetsRequest { AssetClass = AssetClass.Crypto, AssetStatus = AssetStatus.Active});
 
         Assert.NotNull(assets);
         Assert.NotEmpty(assets);
@@ -151,6 +152,10 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
 
         Assert.NotNull(asset);
         Assert.Equal(Symbol, asset.Symbol);
+
+        Assert.NotNull(asset.Name);
+        Assert.NotEqual(Guid.Empty, asset.AssetId);
+        Assert.True(asset.IsTradable | asset.Shortable | asset.EasyToBorrow | asset.Fractionable | asset.Marginable);
     }
 
     [Fact]

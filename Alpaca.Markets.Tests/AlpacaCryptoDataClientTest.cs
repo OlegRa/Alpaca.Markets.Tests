@@ -1,119 +1,187 @@
 namespace Alpaca.Markets.Tests;
 
 [Collection("PaperEnvironment")]
-public sealed partial class AlpacaCryptoDataClientTest : IDisposable
+// ReSharper disable once PartialTypeWithSinglePart
+public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IAlpacaCryptoDataClient>
 {
-    private const String Symbol = "BTCUSD";
-
-    private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
-
-    private readonly IAlpacaCryptoDataClient _alpacaCryptoDataClient;
-
-    public AlpacaCryptoDataClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
+    public AlpacaCryptoDataClientTest(
+        PaperEnvironmentClientsFactoryFixture clientsFactory)
+        : base(
+            clientsFactory.GetAlpacaTradingClient(),
+            clientsFactory.GetAlpacaCryptoDataClient(),
+            "BTCUSD", "ETHUSD")
     {
-        _clientsFactory = clientsFactory;
-        _alpacaCryptoDataClient = clientsFactory.GetAlpacaCryptoDataClient();
     }
 
     [Fact]
     public async void ListDayHistoricalBarsWorks()
     {
-        var into = (await getLastTradingDay()).Date;
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
-        var bars = await _alpacaCryptoDataClient.ListHistoricalBarsAsync(
+        var bars = await Client.ListHistoricalBarsAsync(
             new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Day));
 
-        Assert.NotNull(bars);
-        Assert.NotNull(bars.Items);
-        Assert.NotEmpty(bars.Items);
+        AssertPageIsValid(bars, AssertBarIsValid);
     }
 
     [Fact]
     public async void ListHourHistoricalBarsWorks()
     {
-        var into = await getLastTradingDay();
+        var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddHours(-5);
-        var bars = await _alpacaCryptoDataClient.ListHistoricalBarsAsync(
+        var bars = await Client.ListHistoricalBarsAsync(
             new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Hour));
 
-        Assert.NotNull(bars);
-        Assert.NotNull(bars.Items);
-        Assert.NotEmpty(bars.Items);
+        AssertPageIsValid(bars, AssertBarIsValid);
     }
 
     [Fact]
     public async void ListMinuteHistoricalBarsWorks()
     {
-        var into = await getLastTradingDay();
+        var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddMinutes(-25);
-        var bars = await _alpacaCryptoDataClient.ListHistoricalBarsAsync(
+        var bars = await Client.ListHistoricalBarsAsync(
             new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Minute));
 
-        Assert.NotNull(bars);
-        Assert.NotNull(bars.Items);
-        Assert.NotEmpty(bars.Items);
+        AssertPageIsValid(bars, AssertBarIsValid);
+    }
+
+    [Fact]
+    public async void GetDayHistoricalBarsWorks()
+    {
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-5).Date;
+        var bars = await Client.GetHistoricalBarsAsync(
+            new HistoricalCryptoBarsRequest(Symbols, from, into, BarTimeFrame.Day));
+
+        AssertPageIsValid(bars, AssertBarIsValid);
+    }
+
+    [Fact]
+    public async void HistoricalRequestBaseNoSymbolsValidationWorks()
+    {
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-5).Date;
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
+            new HistoricalCryptoBarsRequest(Array.Empty<String>(), from, into, BarTimeFrame.Day)));
+    }
+
+    [Fact]
+    public async void HistoricalRequestBaseEmptySymbolValidationWorks()
+    {
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-5).Date;
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
+            new HistoricalCryptoBarsRequest(new []{ String.Empty }, from, into, BarTimeFrame.Day)));
+    }
+
+    [Fact]
+    public async void HistoricalRequestBaseEmptyPageValidationWorks()
+    {
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-5).Date;
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
+            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Day)
+                .WithPageSize(UInt32.MinValue)));
+    }
+
+    [Fact]
+    public async void HistoricalRequestBaseHugePageValidationWorks()
+    {
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-5).Date;
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
+            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Day)
+                .WithPageSize(UInt32.MaxValue)));
     }
 
     [Fact]
     public async void ListHistoricalQuotesWorks()
     {
-        var into = (await getLastTradingDay()).Date;
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
-        var quotes = await _alpacaCryptoDataClient.ListHistoricalQuotesAsync(
+        var quotes = await Client.ListHistoricalQuotesAsync(
             new HistoricalCryptoQuotesRequest(Symbol, from, into));
 
-        Assert.NotNull(quotes);
-        Assert.NotNull(quotes.Items);
-        Assert.NotEmpty(quotes.Items);
+        AssertPageIsValid(quotes, AssertQuoteIsValid, false);
+    }
+
+    [Fact]
+    public async void GetHistoricalQuotesWorks()
+    {
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-3).Date;
+        var quotes = await Client.GetHistoricalQuotesAsync(
+            new HistoricalCryptoQuotesRequest(Symbols, from, into));
+
+        AssertPageIsValid(quotes, AssertQuoteIsValid, false);
     }
 
     [Fact]
     public async void ListHistoricalTradesWorks()
     {
-        var into = (await getLastTradingDay()).Date;
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
-        var quotes = await _alpacaCryptoDataClient.ListHistoricalTradesAsync(
+        var trades = await Client.ListHistoricalTradesAsync(
             new HistoricalCryptoTradesRequest(Symbol, from, into));
 
-        Assert.NotNull(quotes);
-        Assert.NotNull(quotes.Items);
-        Assert.NotEmpty(quotes.Items);
+        AssertPageIsValid(trades, AssertTradeIsValid, false);
     }
 
     [Fact]
-    public async void GetLatestQuoteWorks()
+    public async void GetHistoricalTradesWorks()
     {
-        var quote = await _alpacaCryptoDataClient.GetLatestQuoteAsync(
-            new LatestDataRequest(Symbol, CryptoExchange.Cbse));
+        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var from = into.AddDays(-3).Date;
+        var trades = await Client.GetHistoricalTradesAsync(
+            new HistoricalCryptoTradesRequest(Symbols, from, into));
 
-        Assert.NotNull(quote);
-        Assert.Equal(Symbol, quote.Symbol);
+        AssertPageIsValid(trades, AssertTradeIsValid, false);
     }
 
     [Fact]
-    public async void GetLatestTradeWorks()
-    {
-        var trade = await _alpacaCryptoDataClient.GetLatestTradeAsync(
-            new LatestDataRequest(Symbol, CryptoExchange.Ersx));
+    public async void GetLatestQuoteWorks() =>
+        AssertQuoteIsValid(await Client.GetLatestQuoteAsync(
+            new LatestDataRequest(Symbol, CryptoExchange.Cbse)));
 
-        Assert.NotNull(trade);
-        Assert.Equal(Symbol, trade.Symbol);
+    [Fact]
+    public async void GetLatestTradeWorks() =>
+        AssertTradeIsValid(await Client.GetLatestTradeAsync(
+            new LatestDataRequest(Symbol, CryptoExchange.Ersx)));
+
+    [Fact(Skip = "Re-enable it after releasing SDK with updated sources.")]
+    public async void LatestTradeRequestValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetLatestTradeAsync(
+            new LatestDataRequest(String.Empty, CryptoExchange.Ersx)));
+
+    [Fact]
+    public async void GetSnapshotWorks()
+    {
+        var snapshot = await Client.GetSnapshotAsync(
+            new SnapshotDataRequest(Symbol, CryptoExchange.Cbse));
+
+        Assert.NotNull(snapshot);
+        Assert.Equal(Symbol, snapshot.Symbol);
+
+        assertSnapshotIsValid(snapshot, Symbol);
     }
 
-    private async Task<DateTime> getLastTradingDay()
+    [Fact(Skip = "Re-enable it after releasing SDK with updated sources.")]
+    public async void SnapshotDataRequestValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client
+            .GetSnapshotAsync(new SnapshotDataRequest(String.Empty, CryptoExchange.Cbse)));
+
+    [Fact]
+    public async void GetLatestBestBidOfferWorks() =>
+        AssertQuoteIsValid(await Client.GetLatestBestBidOfferAsync(new LatestBestBidOfferRequest(Symbol)));
+
+    private void assertSnapshotIsValid(ISnapshot snapshot, String symbol)
     {
-        using var alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
+        AssertBarIsValid(snapshot.PreviousDailyBar!, symbol);
+        AssertBarIsValid(snapshot.CurrentDailyBar!, symbol);
+        AssertBarIsValid(snapshot.MinuteBar!, symbol);
 
-        var calendars = await alpacaTradingClient
-            .ListCalendarAsync(new CalendarRequest().WithInterval(
-                new Interval<DateOnly>(
-                    DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
-                    DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-1)))));
-
-        Assert.NotNull(calendars);
-
-        return calendars.Last().TradingCloseTimeUtc;
+        AssertQuoteIsValid(snapshot.Quote!, symbol);
+        AssertTradeIsValid(snapshot.Trade!, symbol);
     }
-
-    public void Dispose() => _alpacaCryptoDataClient?.Dispose();
 }
