@@ -61,7 +61,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void ListHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
+        var from = into.AddDays(-5).Date;
         var quotes = await Client.ListHistoricalQuotesAsync(
             new HistoricalQuotesRequest(Symbol, from, into));
 
@@ -72,7 +72,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void GetHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
+        var from = into.AddDays(-5).Date;
         var quotes = await Client.GetHistoricalQuotesAsync(
             new HistoricalQuotesRequest(Symbols, from, into));
 
@@ -83,7 +83,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void ListHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
+        var from = into.AddDays(-5).Date;
         var trades = await Client.ListHistoricalTradesAsync(
             new HistoricalTradesRequest(Symbol, from, into));
 
@@ -94,7 +94,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void GetHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
+        var from = into.AddDays(-5).Date;
         var trades = await Client.GetHistoricalTradesAsync(
             new HistoricalTradesRequest(Symbols, from, into));
 
