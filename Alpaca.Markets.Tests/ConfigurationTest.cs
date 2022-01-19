@@ -69,8 +69,7 @@ public sealed class ConfigurationTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var nullSecurityId = new AlpacaStreamingClientConfiguration { SecurityId = null };
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-        // TODO: olegra - replace with proper exception type after upgrade
-        Assert.Throws<NullReferenceException>(() => nullSecurityId.GetClient());
+        Assert.Throws<InvalidOperationException>(() => nullSecurityId.GetClient());
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var nullApiEndpoint = new AlpacaStreamingClientConfiguration { ApiEndpoint = null };
@@ -84,8 +83,7 @@ public sealed class ConfigurationTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var nullSecurityId = new AlpacaDataStreamingClientConfiguration { SecurityId = null };
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-        // TODO: olegra - replace with proper exception type after upgrade
-        Assert.Throws<NullReferenceException>(() => nullSecurityId.GetClient());
+        Assert.Throws<InvalidOperationException>(() => nullSecurityId.GetClient());
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var nullApiEndpoint = new AlpacaDataStreamingClientConfiguration { ApiEndpoint = null };
@@ -99,8 +97,7 @@ public sealed class ConfigurationTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var nullSecurityId = new AlpacaCryptoStreamingClientConfiguration { SecurityId = null };
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-        // TODO: olegra - replace with proper exception type after upgrade
-        Assert.Throws<NullReferenceException>(() => nullSecurityId.GetClient());
+        Assert.Throws<InvalidOperationException>(() => nullSecurityId.GetClient());
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var nullApiEndpoint = new AlpacaCryptoStreamingClientConfiguration { ApiEndpoint = null };
