@@ -22,7 +22,7 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
 
         Assert.NotNull(portfolioHistory);
         Assert.NotNull(portfolioHistory.Items);
-        Assert.NotEqual(0M, portfolioHistory.BaseValue);
+        Assert.True(portfolioHistory.BaseValue >= 0M);
 
         var lastTimestamp = DateTime.MinValue;
         foreach (var item in portfolioHistory.Items)

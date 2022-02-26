@@ -58,44 +58,6 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void HistoricalRequestBaseNoSymbolsValidationWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
-        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
-            new HistoricalCryptoBarsRequest(Array.Empty<String>(), from, into, BarTimeFrame.Day)));
-    }
-
-    [Fact]
-    public async void HistoricalRequestBaseEmptySymbolValidationWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
-        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
-            new HistoricalCryptoBarsRequest(new []{ String.Empty }, from, into, BarTimeFrame.Day)));
-    }
-
-    [Fact]
-    public async void HistoricalRequestBaseEmptyPageValidationWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
-        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
-            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Day)
-                .WithPageSize(UInt32.MinValue)));
-    }
-
-    [Fact]
-    public async void HistoricalRequestBaseHugePageValidationWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
-        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetHistoricalBarsAsync(
-            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Day)
-                .WithPageSize(UInt32.MaxValue)));
-    }
-
-    [Fact]
     public async void ListHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;

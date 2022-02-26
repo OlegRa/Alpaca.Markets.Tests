@@ -24,9 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AlpacaTradingClientTest.WatchList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientsFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConfigurationTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ConvertersTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globals.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IntervalTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="AlpacaDataClientTest.*.cs">
