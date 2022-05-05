@@ -50,7 +50,7 @@ public sealed partial class AlpacaTradingClientTest
         Assert.NotNull(orderById);
         Assert.NotNull(orderByClientId);
 
-        var result = await _alpacaTradingClient.DeleteOrderAsync(order.OrderId);
+        var result = await _alpacaTradingClient.CancelOrderAsync(order.OrderId);
 
         Assert.True(result);
 

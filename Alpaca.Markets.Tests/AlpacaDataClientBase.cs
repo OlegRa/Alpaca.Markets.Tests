@@ -30,14 +30,14 @@ public abstract class AlpacaDataClientBase<TClient> : IDisposable
     protected async Task<DateTime> GetLastTradingDayCloseTimeUtc()
     {
         var calendars = await _alpacaTradingClient
-            .ListCalendarAsync(new CalendarRequest().WithInterval(
+            .ListIntervalCalendarAsync(new CalendarRequest().WithInterval(
                 new Interval<DateOnly>(
                     DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
                     DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-1)))));
 
         Assert.NotNull(calendars);
 
-        return calendars.Last().TradingCloseTimeUtc;
+        return calendars.Last().Trading.CloseEst.UtcDateTime;
     }
 
     protected static void AssertPageIsValid<TItem>(

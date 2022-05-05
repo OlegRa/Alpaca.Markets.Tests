@@ -103,16 +103,16 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
 
     [Fact]
     public async void GetLatestQuoteWorks() =>
-        AssertQuoteIsValid(await Client.GetLatestQuoteAsync(Symbol));
+        AssertQuoteIsValid(await Client.GetLatestQuoteAsync(new LatestMarketDataRequest(Symbol)));
 
     [Fact]
     public async void GetLatestTradeWorks() =>
-        AssertTradeIsValid(await Client.GetLatestTradeAsync(Symbol));
+        AssertTradeIsValid(await Client.GetLatestTradeAsync(new LatestMarketDataRequest(Symbol)));
 
     [Fact]
     public async void GetSnapshotWorks()
     {
-        var snapshot = await Client.GetSnapshotAsync(Symbol);
+        var snapshot = await Client.GetSnapshotAsync(new LatestMarketDataRequest(Symbol));
 
         Assert.NotNull(snapshot);
         Assert.Equal(Symbol, snapshot.Symbol);
@@ -123,7 +123,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     [Fact]
     public async void GetSnapshotsWorks()
     {
-        var snapshotsDictionary = await Client.GetSnapshotsAsync(Symbols);
+        var snapshotsDictionary = await Client.ListSnapshotsAsync(new LatestMarketDataListRequest(Symbols));
 
         Assert.NotNull(snapshotsDictionary);
 

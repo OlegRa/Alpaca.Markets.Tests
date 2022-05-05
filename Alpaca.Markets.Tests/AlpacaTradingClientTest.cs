@@ -171,7 +171,7 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
     [Fact]
     public async void ListCalendarWorks()
     {
-        var calendars = await _alpacaTradingClient.ListCalendarAsync(
+        var calendars = await _alpacaTradingClient.ListIntervalCalendarAsync(
             new CalendarRequest().WithInterval(
                 new Interval<DateOnly>(
                     DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
@@ -180,16 +180,19 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
         Assert.NotNull(calendars);
         Assert.NotEmpty(calendars);
 
-        var first = calendars[0];
-        var last = calendars[^1];
+        var first = calendars[0].Trading;
+        var last = calendars[^1].Trading;
 
-        Assert.True(first.TradingDate <= last.TradingDate);
-        Assert.True(first.TradingDateUtc <= last.TradingDateUtc);
-        Assert.True(first.TradingOpenTimeUtc < first.TradingCloseTimeUtc);
-        Assert.True(last.TradingOpenTimeUtc < last.TradingCloseTimeUtc);
+        Assert.True(first.OpenEst.Date <= last.OpenEst.Date);
+        Assert.True(first.OpenEst < first.CloseEst);
+        Assert.True(last.OpenEst < last.CloseEst);
 
-        Assert.True(first.OpenTimeEst < first.CloseTimeEst);
-        Assert.True(last.OpenTimeUtc < last.CloseTimeUtc);
+        first = calendars[0].Session;
+        last = calendars[^1].Session;
+
+        Assert.True(first.OpenEst.Date <= last.OpenEst.Date);
+        Assert.True(first.OpenEst < first.CloseEst);
+        Assert.True(last.OpenEst < last.CloseEst);
     }
 
     [Fact(Skip = "Run too long and sometimes fail")]
