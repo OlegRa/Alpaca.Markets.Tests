@@ -139,7 +139,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetLatestQuoteWorks()
         {
-            var quote = await _alpacaDataClient.GetLatestQuoteAsync(Symbol);
+            var quote = await _alpacaDataClient.GetLatestQuoteAsync(new LatestMarketDataRequest(Symbol));
 
             Assert.NotNull(quote);
             Assert.Equal(Symbol, quote.Symbol);
@@ -148,7 +148,7 @@ namespace Alpaca.Markets.Tests
         [Fact]
         public async void GetLatestTradeWorks()
         {
-            var trade = await _alpacaDataClient.GetLatestTradeAsync(Symbol);
+            var trade = await _alpacaDataClient.GetLatestTradeAsync(new LatestMarketDataRequest(Symbol));
 
             Assert.NotNull(trade);
             Assert.Equal(Symbol, trade.Symbol);
