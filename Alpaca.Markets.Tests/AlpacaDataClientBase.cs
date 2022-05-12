@@ -140,14 +140,7 @@ public abstract class AlpacaDataClientBase<TClient> : IDisposable
         Assert.True(trade.Size >= 0M);
         Assert.True(trade.Price >= 0M);
 
-        if (trade.TakerSide == TakerSide.Unknown)
-        {
-            Assert.NotEqual(0UL, trade.TradeId);
-        }
-        else
-        {
-            Assert.NotEqual(UInt64.MaxValue, trade.TradeId);
-        }
+        Assert.NotEqual(trade.TakerSide == TakerSide.Unknown ? 0UL : UInt64.MaxValue, trade.TradeId);
 
         Assert.True(trade.TimestampUtc <= DateTime.UtcNow);
     }

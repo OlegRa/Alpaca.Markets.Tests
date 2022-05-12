@@ -219,5 +219,5 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
         // Assert.NotEmpty(orders);
     }
 
-    public void Dispose() => _alpacaTradingClient?.Dispose();
+    public void Dispose() => _alpacaTradingClient.Dispose();
 }

@@ -4,6 +4,7 @@ using Alpaca.Markets.Extensions;
 
 namespace Alpaca.Markets.Tests;
 
+[SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
 public sealed class ConfigurationTest
 {
     [Fact]

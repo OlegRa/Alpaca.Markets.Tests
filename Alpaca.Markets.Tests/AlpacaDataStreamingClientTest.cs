@@ -73,7 +73,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
     }
 
     [SkippableFact]
-    public async Task MinuteAggSubscriptionWorks()
+    public async Task MinuteBarSubscriptionWorks()
     {
         Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
 
@@ -101,7 +101,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
     }
 
     [SkippableFact]
-    public async Task AllMinuteAggSubscriptionWorks()
+    public async Task AllMinuteBarSubscriptionWorks()
     {
         Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
 
@@ -128,7 +128,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
         await client.DisconnectAsync();
     }
 
-    public void Dispose() => _alpacaTradingClient?.Dispose();
+    public void Dispose() => _alpacaTradingClient.Dispose();
 
     private async Task<Boolean> isCurrentSessionOpenAsync() => 
         (await _alpacaTradingClient.GetClockAsync()).IsOpen;
