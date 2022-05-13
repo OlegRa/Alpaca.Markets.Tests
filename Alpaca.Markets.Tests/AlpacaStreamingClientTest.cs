@@ -2,47 +2,46 @@
 using System.Threading;
 using Xunit;
 
-namespace Alpaca.Markets.Tests
+namespace Alpaca.Markets.Tests;
+
+[Collection("PaperEnvironment")]
+public sealed class AlpacaStreamingClientTest
 {
-    [Collection("PaperEnvironment")]
-    public sealed class AlpacaStreamingClientTest
+    private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
+
+    public AlpacaStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory) => 
+        _clientsFactory = clientsFactory;
+
+    [Fact]
+    public async void ConnectWorks()
     {
-        private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
+        using var client = _clientsFactory.GetAlpacaStreamingClient();
 
-        public AlpacaStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory) => 
-            _clientsFactory = clientsFactory;
-
-        [Fact]
-        public async void ConnectWorks()
+        static void HandleOnError(Exception ex)
         {
-            using var client = _clientsFactory.GetAlpacaStreamingClient();
-
-            static void HandleOnError(Exception ex)
-            {
-                Assert.Null(ex.Message);
-            }
-
-            client.OnError += HandleOnError;
-
-            await client.ConnectAsync();
-
-            var waitObject = new AutoResetEvent(false);
-
-            void HandleOnConnected(AuthStatus status)
-            {
-                Assert.Equal(AuthStatus.Authorized, status);
-                waitObject.Set();
-            }
-
-            client.Connected += HandleOnConnected;
-
-            Assert.True(waitObject.WaitOne(
-                TimeSpan.FromSeconds(10)));
-
-            client.Connected -= HandleOnConnected;
-            client.OnError -= HandleOnError;
-
-            await client.DisconnectAsync();
+            Assert.Null(ex.Message);
         }
+
+        client.OnError += HandleOnError;
+
+        await client.ConnectAsync();
+
+        var waitObject = new AutoResetEvent(false);
+
+        void HandleOnConnected(AuthStatus status)
+        {
+            Assert.Equal(AuthStatus.Authorized, status);
+            waitObject.Set();
+        }
+
+        client.Connected += HandleOnConnected;
+
+        Assert.True(waitObject.WaitOne(
+            TimeSpan.FromSeconds(10)));
+
+        client.Connected -= HandleOnConnected;
+        client.OnError -= HandleOnError;
+
+        await client.DisconnectAsync();
     }
 }
