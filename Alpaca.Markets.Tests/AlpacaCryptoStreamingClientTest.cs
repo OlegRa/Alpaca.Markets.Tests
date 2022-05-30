@@ -2,15 +2,15 @@
 
 [Collection("PaperEnvironment")]
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
-public sealed partial class AlpacaDataStreamingClientTest : IDisposable
+public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
 {
-    private const String Symbol = "AAPL";
+    private const String Symbol = "BTCUSD";
 
     private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
     private readonly IAlpacaTradingClient _alpacaTradingClient;
 
-    public AlpacaDataStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
+    public AlpacaCryptoStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
     {
         _clientsFactory = clientsFactory;
         _alpacaTradingClient = _clientsFactory.GetAlpacaTradingClient();
@@ -21,7 +21,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
     {
         Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
 
-        using var client = _clientsFactory.GetAlpacaDataStreamingClient();
+        using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
 
@@ -37,7 +37,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
         await client.SubscribeAsync(subscription);
 
         Assert.True(waitObject.WaitOne(
-            TimeSpan.FromSeconds(10)));
+            TimeSpan.FromSeconds(30)));
 
         await client.UnsubscribeAsync(subscription);
 
@@ -49,7 +49,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
     {
         Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
 
-        using var client = _clientsFactory.GetAlpacaDataStreamingClient();
+        using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
 
@@ -77,7 +77,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
     {
         Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
 
-        using var client = _clientsFactory.GetAlpacaDataStreamingClient();
+        using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
 
@@ -105,7 +105,7 @@ public sealed partial class AlpacaDataStreamingClientTest : IDisposable
     {
         Skip.IfNot(await isCurrentSessionOpenAsync(), "Trading session is closed now.");
 
-        using var client = _clientsFactory.GetAlpacaDataStreamingClient();
+        using var client = _clientsFactory.GetAlpacaCryptoStreamingClient();
 
         await client.ConnectAndAuthenticateAsync();
 

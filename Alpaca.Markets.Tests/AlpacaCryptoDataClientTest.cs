@@ -2,14 +2,14 @@ namespace Alpaca.Markets.Tests;
 
 [Collection("PaperEnvironment")]
 // ReSharper disable once PartialTypeWithSinglePart
-public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaDataClient>
+public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IAlpacaCryptoDataClient>
 {
-    public AlpacaDataClientTest(
+    public AlpacaCryptoDataClientTest(
         PaperEnvironmentClientsFactoryFixture clientsFactory)
         : base(
             clientsFactory.GetAlpacaTradingClient(),
-            clientsFactory.GetAlpacaDataClient(),
-            "AAPL", "MSFT")
+            clientsFactory.GetAlpacaCryptoDataClient(),
+            "BTCUSD", "ETHUSD")
     {
     }
 
@@ -19,7 +19,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
         var bars = await Client.ListHistoricalBarsAsync(
-            new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Day));
+            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Day));
 
         AssertPageIsValid(bars, AssertBarIsValid);
     }
@@ -30,7 +30,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddHours(-5);
         var bars = await Client.ListHistoricalBarsAsync(
-            new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour));
+            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Hour));
 
         AssertPageIsValid(bars, AssertBarIsValid);
     }
@@ -41,7 +41,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddMinutes(-25);
         var bars = await Client.ListHistoricalBarsAsync(
-            new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Minute));
+            new HistoricalCryptoBarsRequest(Symbol, from, into, BarTimeFrame.Minute));
 
         AssertPageIsValid(bars, AssertBarIsValid);
     }
@@ -52,7 +52,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
         var bars = await Client.GetHistoricalBarsAsync(
-            new HistoricalBarsRequest(Symbols, from, into, BarTimeFrame.Day));
+            new HistoricalCryptoBarsRequest(Symbols, from, into, BarTimeFrame.Day));
 
         AssertPageIsValid(bars, AssertBarIsValid);
     }
@@ -61,9 +61,9 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void ListHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
+        var from = into.AddDays(-3).Date;
         var quotes = await Client.ListHistoricalQuotesAsync(
-            new HistoricalQuotesRequest(Symbol, from, into));
+            new HistoricalCryptoQuotesRequest(Symbol, from, into));
 
         AssertPageIsValid(quotes, AssertQuoteIsValid, false);
     }
@@ -72,9 +72,9 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void GetHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
+        var from = into.AddDays(-3).Date;
         var quotes = await Client.GetHistoricalQuotesAsync(
-            new HistoricalQuotesRequest(Symbols, from, into));
+            new HistoricalCryptoQuotesRequest(Symbols, from, into));
 
         AssertPageIsValid(quotes, AssertQuoteIsValid, false);
     }
@@ -83,9 +83,9 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void ListHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
+        var from = into.AddDays(-3).Date;
         var trades = await Client.ListHistoricalTradesAsync(
-            new HistoricalTradesRequest(Symbol, from, into));
+            new HistoricalCryptoTradesRequest(Symbol, from, into));
 
         AssertPageIsValid(trades, AssertTradeIsValid, false);
     }
@@ -94,25 +94,33 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     public async void GetHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-5).Date;
+        var from = into.AddDays(-3).Date;
         var trades = await Client.GetHistoricalTradesAsync(
-            new HistoricalTradesRequest(Symbols, from, into));
+            new HistoricalCryptoTradesRequest(Symbols, from, into));
 
         AssertPageIsValid(trades, AssertTradeIsValid, false);
     }
 
     [Fact]
     public async void GetLatestQuoteWorks() =>
-        AssertQuoteIsValid(await Client.GetLatestQuoteAsync(new LatestMarketDataRequest(Symbol)));
+        AssertQuoteIsValid(await Client.GetLatestQuoteAsync(
+            new LatestDataRequest(Symbol, CryptoExchange.Cbse)));
 
     [Fact]
     public async void GetLatestTradeWorks() =>
-        AssertTradeIsValid(await Client.GetLatestTradeAsync(new LatestMarketDataRequest(Symbol)));
+        AssertTradeIsValid(await Client.GetLatestTradeAsync(
+            new LatestDataRequest(Symbol, CryptoExchange.Ersx)));
+
+    [Fact(Skip = "Re-enable it after releasing SDK with updated sources.")]
+    public async void LatestTradeRequestValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetLatestTradeAsync(
+            new LatestDataRequest(String.Empty, CryptoExchange.Ersx)));
 
     [Fact]
     public async void GetSnapshotWorks()
     {
-        var snapshot = await Client.GetSnapshotAsync(new LatestMarketDataRequest(Symbol));
+        var snapshot = await Client.GetSnapshotAsync(
+            new SnapshotDataRequest(Symbol, CryptoExchange.Cbse));
 
         Assert.NotNull(snapshot);
         Assert.Equal(Symbol, snapshot.Symbol);
@@ -120,31 +128,14 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
         assertSnapshotIsValid(snapshot, Symbol);
     }
 
-    [Fact]
-    public async void GetSnapshotsWorks()
-    {
-        var snapshotsDictionary = await Client.ListSnapshotsAsync(new LatestMarketDataListRequest(Symbols));
-
-        Assert.NotNull(snapshotsDictionary);
-
-        // ReSharper disable once UseDeconstruction
-        foreach (var kvp in snapshotsDictionary)
-        {
-            assertSnapshotIsValid(kvp.Value, kvp.Key);
-        }
-    }
+    [Fact(Skip = "Re-enable it after releasing SDK with updated sources.")]
+    public async void SnapshotDataRequestValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client
+            .GetSnapshotAsync(new SnapshotDataRequest(String.Empty, CryptoExchange.Cbse)));
 
     [Fact]
-    public async void ListExchangesWorks() => 
-        assertStringDictionaryIsValid(await Client.ListExchangesAsync());
-
-    [Fact]
-    public async void ListTradeConditionsWorks() => 
-        assertStringDictionaryIsValid(await Client.ListTradeConditionsAsync(Tape.A));
-
-    [Fact]
-    public async void ListQuoteConditionsWorks() => 
-        assertStringDictionaryIsValid(await Client.ListQuoteConditionsAsync(Tape.C));
+    public async void GetLatestBestBidOfferWorks() =>
+        AssertQuoteIsValid(await Client.GetLatestBestBidOfferAsync(new LatestBestBidOfferRequest(Symbol)));
 
     private void assertSnapshotIsValid(ISnapshot snapshot, String symbol)
     {
@@ -155,13 +146,4 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
         AssertQuoteIsValid(snapshot.Quote!, symbol);
         AssertTradeIsValid(snapshot.Trade!, symbol);
     }
-
-    private static void assertStringDictionaryIsValid(IReadOnlyDictionary<String, String> exchanges)
-    {
-        // ReSharper disable once UseDeconstruction
-        foreach (var kvp in exchanges)
-        {
-            Assert.NotNull(kvp.Key);
-            Assert.False(String.IsNullOrWhiteSpace(kvp.Value));
-        }
-    }}
+}

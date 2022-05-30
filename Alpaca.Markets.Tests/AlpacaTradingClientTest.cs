@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace Alpaca.Markets.Tests;
+﻿namespace Alpaca.Markets.Tests;
 
 [Collection("PaperEnvironment")]
 public sealed partial class AlpacaTradingClientTest : IDisposable
@@ -27,6 +22,18 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
 
         Assert.NotNull(portfolioHistory);
         Assert.NotNull(portfolioHistory.Items);
+        Assert.True(portfolioHistory.BaseValue >= 0M);
+
+        var lastTimestamp = DateTime.MinValue;
+        foreach (var item in portfolioHistory.Items)
+        {
+            Assert.NotNull(item.Equity);
+            Assert.NotNull(item.ProfitLoss);
+            Assert.NotNull(item.ProfitLossPercentage);
+            
+            Assert.True(lastTimestamp < item.TimestampUtc);
+            lastTimestamp = item.TimestampUtc;
+        }
     }
 
     [Fact]
@@ -132,7 +139,7 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
     public async void ListAssetsWorks()
     {
         var assets = await _alpacaTradingClient.ListAssetsAsync(
-            new AssetsRequest());
+            new AssetsRequest { AssetClass = AssetClass.Crypto, AssetStatus = AssetStatus.Active});
 
         Assert.NotNull(assets);
         Assert.NotEmpty(assets);
@@ -145,6 +152,10 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
 
         Assert.NotNull(asset);
         Assert.Equal(Symbol, asset.Symbol);
+
+        Assert.NotNull(asset.Name);
+        Assert.NotEqual(Guid.Empty, asset.AssetId);
+        Assert.True(asset.IsTradable | asset.Shortable | asset.EasyToBorrow | asset.Fractionable | asset.Marginable);
     }
 
     [Fact]
@@ -160,23 +171,28 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
     [Fact]
     public async void ListCalendarWorks()
     {
-        var calendars = await _alpacaTradingClient.ListCalendarAsync(
-            new CalendarRequest().SetInclusiveTimeInterval(
-                DateTime.Today.AddDays(-14),
-                DateTime.Today.AddDays(14)));
+        var calendars = await _alpacaTradingClient.ListIntervalCalendarAsync(
+            new CalendarRequest().WithInterval(
+                new Interval<DateOnly>(
+                    DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
+                    DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(14)))));
 
         Assert.NotNull(calendars);
+        Assert.NotEmpty(calendars);
 
-        var calendarsList = calendars.ToList();
+        var first = calendars[0].Trading;
+        var last = calendars[^1].Trading;
 
-        Assert.NotEmpty(calendarsList);
+        Assert.True(first.OpenEst.Date <= last.OpenEst.Date);
+        Assert.True(first.OpenEst < first.CloseEst);
+        Assert.True(last.OpenEst < last.CloseEst);
 
-        var first = calendarsList.First();
-        var last = calendarsList.Last();
+        first = calendars[0].Session;
+        last = calendars[^1].Session;
 
-        Assert.True(first.TradingDateUtc <= last.TradingDateUtc);
-        Assert.True(first.TradingOpenTimeUtc < first.TradingCloseTimeUtc);
-        Assert.True(last.TradingOpenTimeUtc < last.TradingCloseTimeUtc);
+        Assert.True(first.OpenEst.Date <= last.OpenEst.Date);
+        Assert.True(first.OpenEst < first.CloseEst);
+        Assert.True(last.OpenEst < last.CloseEst);
     }
 
     [Fact(Skip = "Run too long and sometimes fail")]
@@ -196,12 +212,12 @@ public sealed partial class AlpacaTradingClientTest : IDisposable
     public async void ListOrdersForDatesWorks()
     {
         var orders = await _alpacaTradingClient.ListOrdersAsync(
-            new ListOrdersRequest().SetTimeInterval(
-                DateTime.Today.AddDays(-5).GetExclusiveIntervalTillThat()));
+            new ListOrdersRequest().WithInterval(
+                DateTime.Today.AddDays(-5).GetIntervalTillThat()));
 
         Assert.NotNull(orders);
         // Assert.NotEmpty(orders);
     }
 
-    public void Dispose() => _alpacaTradingClient?.Dispose();
+    public void Dispose() => _alpacaTradingClient.Dispose();
 }

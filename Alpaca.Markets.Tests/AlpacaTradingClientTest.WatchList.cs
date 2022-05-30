@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using Xunit;
-
-namespace Alpaca.Markets.Tests;
+﻿namespace Alpaca.Markets.Tests;
 
 public sealed partial class AlpacaTradingClientTest
 {
@@ -20,6 +16,7 @@ public sealed partial class AlpacaTradingClientTest
 
         Assert.NotNull(newWatchList);
         Assert.Equal(newWatchListName, newWatchList.Name);
+        Assert.NotEqual(newWatchList.AccountId, Guid.Empty);
 
         var updatedWatchList = await _alpacaTradingClient.GetWatchListByIdAsync(
             newWatchList.WatchListId);
@@ -85,7 +82,6 @@ public sealed partial class AlpacaTradingClientTest
         Assert.Equal(newWatchList.WatchListId, updatedWatchList.WatchListId);
         Assert.Equal(newWatchList.Assets.Count, updatedWatchList.Assets.Count);
 
-
         updatedWatchList = await _alpacaTradingClient.AddAssetIntoWatchListByNameAsync(
             new ChangeWatchListRequest<String>(newWatchList.Name, "AMZN"));
 
@@ -104,4 +100,24 @@ public sealed partial class AlpacaTradingClientTest
 
         Assert.True(await _alpacaTradingClient.DeleteWatchListByNameAsync(newWatchList.Name));
     }
+
+    [Fact]
+    public async void UpdateWatchListRequestNameValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.UpdateWatchListByIdAsync(
+            new UpdateWatchListRequest(Guid.NewGuid(), String.Empty, Array.Empty<String>())));
+
+    [Fact]
+    public async void UpdateWatchListRequestSymbolsValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.UpdateWatchListByIdAsync(
+            new UpdateWatchListRequest(Guid.NewGuid(), Guid.NewGuid().ToString("N"), new []{ String.Empty})));
+
+    [Fact]
+    public async void ChangeWatchListRequestNameValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.AddAssetIntoWatchListByNameAsync(
+            new ChangeWatchListRequest<String>(String.Empty, "AAPL")));
+
+    [Fact]
+    public async void ChangeWatchListRequestSymbolsValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.AddAssetIntoWatchListByIdAsync(
+            new ChangeWatchListRequest<Guid>(Guid.NewGuid(), String.Empty)));
 }

@@ -2,27 +2,26 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;net48</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);EXTENSIONS</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <WarningLevel>5</WarningLevel>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="AlpacaTradingClientTest.*.cs">
-      <DependentUpon>AlpacaTradingClientTest.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Alpaca.Markets" Version="5.3.1" />
-    <PackageReference Include="Alpaca.Markets.Extensions" Version="5.3.1" />
+    <PackageReference Include="Alpaca.Markets" Version="6.0.3" />
+    <PackageReference Include="Alpaca.Markets.Extensions" Version="6.0.3" />
+    <PackageReference Include="IndexRange" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.4">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
