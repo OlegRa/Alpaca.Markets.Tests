@@ -112,9 +112,8 @@ public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
         var waitObject = new AutoResetEvent(false);
 
         var subscription = client.GetMinuteBarSubscription();
-        subscription.Received += bar =>
+        subscription.Received += _ =>
         {
-            Assert.Equal(Symbol, bar.Symbol);
             waitObject.Set();
         };
 
