@@ -1,6 +1,6 @@
 namespace Alpaca.Markets.Tests;
 
-[Collection("PaperEnvironment")]
+[Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
 // ReSharper disable once PartialTypeWithSinglePart
 public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaDataClient>
 {

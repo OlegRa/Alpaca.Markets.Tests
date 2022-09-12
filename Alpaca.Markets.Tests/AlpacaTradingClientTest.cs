@@ -1,6 +1,6 @@
 ﻿namespace Alpaca.Markets.Tests;
 
-[Collection("PaperEnvironment")]
+[Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
 public sealed partial class AlpacaTradingClientTest : IDisposable
 {
     private const String Symbol = "AAPL";

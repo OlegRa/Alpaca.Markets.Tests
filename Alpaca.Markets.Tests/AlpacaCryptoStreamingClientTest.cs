@@ -1,6 +1,6 @@
 ﻿namespace Alpaca.Markets.Tests;
 
-[Collection("PaperEnvironment")]
+[Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
 public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
 {
