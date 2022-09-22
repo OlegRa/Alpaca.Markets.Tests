@@ -4,7 +4,7 @@
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
 public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
 {
-    private const String Symbol = "BTCUSD";
+    private const String Symbol = "BTC/USD";
 
     private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
