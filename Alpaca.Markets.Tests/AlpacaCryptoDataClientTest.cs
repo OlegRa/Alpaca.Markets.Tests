@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Alpaca.Markets.Tests;
 
 [Collection(nameof(PaperEnvironmentClientsFactoryCollection))]

@@ -12,14 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alpaca.Markets" Version="6.1.6" />
-    <PackageReference Include="Alpaca.Markets.Extensions" Version="6.0.5" />
+    <PackageReference Include="Alpaca.Markets" Version="7.0.0-alpha1" />
+    <PackageReference Include="Alpaca.Markets.Extensions" Version="7.0.0-alpha1" />
     <PackageReference Include="IndexRange" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="Portable.System.DateTimeOnly" Version="6.0.2" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
