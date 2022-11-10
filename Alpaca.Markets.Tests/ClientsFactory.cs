@@ -47,7 +47,7 @@ public sealed class PaperEnvironmentClientsFactoryFixture
     private SecretKey getSecretKey() => new (_alpacaKeyId, _alpacaSecretKey);
 }
 
-[CollectionDefinition("PaperEnvironment")]
+[CollectionDefinition(nameof(PaperEnvironmentClientsFactoryCollection))]
 public sealed class PaperEnvironmentClientsFactoryCollection
     : ICollectionFixture<PaperEnvironmentClientsFactoryFixture>
 {

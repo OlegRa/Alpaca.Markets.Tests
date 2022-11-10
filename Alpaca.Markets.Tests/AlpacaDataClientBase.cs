@@ -37,7 +37,7 @@ public abstract class AlpacaDataClientBase<TClient> : IDisposable
 
         Assert.NotNull(calendars);
 
-        return calendars.Last().Trading.CloseEst.UtcDateTime;
+        return calendars.Last().GetTradingCloseTimeUtc();
     }
 
     protected static void AssertPageIsValid<TItem>(

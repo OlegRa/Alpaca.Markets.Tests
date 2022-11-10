@@ -24,7 +24,7 @@ public sealed partial class AlpacaDataClientTest
     [Fact]
     public async void GetHistoricalQuotesAsAsyncEnumerableWorks()
     {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
+        var into = (await GetLastTradingDayCloseTimeUtc());
         var from = into.AddDays(-3).Date;
 
         var count = 0;

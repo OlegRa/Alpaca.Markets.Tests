@@ -1,6 +1,6 @@
 ﻿namespace Alpaca.Markets.Tests;
 
-[Collection("PaperEnvironment")]
+[Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
 public sealed class AlpacaStreamingClientTest
 {
     private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;

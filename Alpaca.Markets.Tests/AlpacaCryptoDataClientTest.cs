@@ -1,6 +1,8 @@
+using System.Linq;
+
 namespace Alpaca.Markets.Tests;
 
-[Collection("PaperEnvironment")]
+[Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
 // ReSharper disable once PartialTypeWithSinglePart
 public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IAlpacaCryptoDataClient>
 {
@@ -9,7 +11,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
         : base(
             clientsFactory.GetAlpacaTradingClient(),
             clientsFactory.GetAlpacaCryptoDataClient(),
-            "BTCUSD", "ETHUSD")
+            "BTC/USD", "ETH/USD")
     {
     }
 
@@ -102,40 +104,48 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void GetLatestQuoteWorks() =>
-        AssertQuoteIsValid(await Client.GetLatestQuoteAsync(
-            new LatestDataRequest(Symbol, CryptoExchange.Cbse)));
+    public async void ListLatestQuotesWorks()
+    {
+        foreach (var kvp in await Client
+                     .ListLatestQuotesAsync(new LatestDataListRequest(Symbols)))
+        {
+            AssertQuoteIsValid(kvp.Value, kvp.Key);
+        }
+    }
 
     [Fact]
-    public async void GetLatestTradeWorks() =>
-        AssertTradeIsValid(await Client.GetLatestTradeAsync(
-            new LatestDataRequest(Symbol, CryptoExchange.Ersx)));
+    public async void ListLatestTradesWorks()
+    {
+        foreach (var kvp in await Client
+                     .ListLatestTradesAsync(new LatestDataListRequest(Symbols)))
+        {
+            AssertTradeIsValid(kvp.Value, kvp.Key);
+        }
+    }
 
-    [Fact(Skip = "Re-enable it after releasing SDK with updated sources.")]
-    public async void LatestTradeRequestValidationWorks() =>
-        await Assert.ThrowsAsync<RequestValidationException>(() => Client.GetLatestTradeAsync(
-            new LatestDataRequest(String.Empty, CryptoExchange.Ersx)));
+    [Fact]
+    public async void LatestDataListRequestValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client.ListLatestTradesAsync(
+            new LatestDataListRequest(new []{ String.Empty })));
 
     [Fact]
     public async void GetSnapshotWorks()
     {
-        var snapshot = await Client.GetSnapshotAsync(
-            new SnapshotDataRequest(Symbol, CryptoExchange.Cbse));
+        var snapshots = await Client.ListSnapshotsAsync(
+            new SnapshotDataListRequest(Symbols));
 
-        Assert.NotNull(snapshot);
-        Assert.Equal(Symbol, snapshot.Symbol);
+        Assert.NotNull(snapshots);
 
-        assertSnapshotIsValid(snapshot, Symbol);
+        foreach (var kvp in snapshots)
+        {
+            assertSnapshotIsValid(kvp.Value, kvp.Key);
+        }
     }
 
-    [Fact(Skip = "Re-enable it after releasing SDK with updated sources.")]
-    public async void SnapshotDataRequestValidationWorks() =>
-        await Assert.ThrowsAsync<RequestValidationException>(() => Client
-            .GetSnapshotAsync(new SnapshotDataRequest(String.Empty, CryptoExchange.Cbse)));
-
     [Fact]
-    public async void GetLatestBestBidOfferWorks() =>
-        AssertQuoteIsValid(await Client.GetLatestBestBidOfferAsync(new LatestBestBidOfferRequest(Symbol)));
+    public async void SnapshotDataListRequestValidationWorks() =>
+        await Assert.ThrowsAsync<RequestValidationException>(() => Client
+            .ListSnapshotsAsync(new SnapshotDataListRequest(new []{ String.Empty })));
 
     private void assertSnapshotIsValid(ISnapshot snapshot, String symbol)
     {

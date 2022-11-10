@@ -1,10 +1,10 @@
 ﻿namespace Alpaca.Markets.Tests;
 
-[Collection("PaperEnvironment")]
+[Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
 public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
 {
-    private const String Symbol = "BTCUSD";
+    private const String Symbol = "BTC/USD";
 
     private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
 
@@ -112,9 +112,8 @@ public sealed partial class AlpacaCryptoStreamingClientTest : IDisposable
         var waitObject = new AutoResetEvent(false);
 
         var subscription = client.GetMinuteBarSubscription();
-        subscription.Received += bar =>
+        subscription.Received += _ =>
         {
-            Assert.Equal(Symbol, bar.Symbol);
             waitObject.Set();
         };
 
