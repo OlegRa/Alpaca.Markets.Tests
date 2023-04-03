@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net472;net48;net481</TargetFrameworks>
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alpaca.Markets" Version="7.0.0-alpha2" />
+    <PackageReference Include="Alpaca.Markets" Version="7.0.0-alpha3" />
     <PackageReference Include="Alpaca.Markets.Extensions" Version="7.0.0-alpha1" />
     <PackageReference Include="IndexRange" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
