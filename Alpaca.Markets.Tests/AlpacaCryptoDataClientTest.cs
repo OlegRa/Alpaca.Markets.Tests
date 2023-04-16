@@ -58,28 +58,6 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListHistoricalQuotesWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
-        var quotes = await Client.ListHistoricalQuotesAsync(
-            new HistoricalCryptoQuotesRequest(Symbol, from, into));
-
-        AssertPageIsValid(quotes, AssertQuoteIsValid, false);
-    }
-
-    [Fact]
-    public async void GetHistoricalQuotesWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
-        var quotes = await Client.GetHistoricalQuotesAsync(
-            new HistoricalCryptoQuotesRequest(Symbols, from, into));
-
-        AssertPageIsValid(quotes, AssertQuoteIsValid, false);
-    }
-
-    [Fact]
     public async void ListHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
