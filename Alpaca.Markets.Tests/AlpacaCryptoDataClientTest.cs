@@ -62,8 +62,10 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
+#pragma warning disable CS0618
         var quotes = await Client.ListHistoricalQuotesAsync(
             new HistoricalCryptoQuotesRequest(Symbol, from, into));
+#pragma warning restore CS0618
 
         AssertPageIsValid(quotes, AssertQuoteIsValid, false);
     }
@@ -73,8 +75,10 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
+#pragma warning disable CS0618
         var quotes = await Client.GetHistoricalQuotesAsync(
             new HistoricalCryptoQuotesRequest(Symbols, from, into));
+#pragma warning restore CS0618
 
         AssertPageIsValid(quotes, AssertQuoteIsValid, false);
     }
