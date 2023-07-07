@@ -63,7 +63,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
         var trades = await Client.ListHistoricalTradesAsync(
-            new HistoricalCryptoTradesRequest(Symbol, from, into));
+            new HistoricalCryptoTradesRequest(Symbol, from, into).WithPageSize(10));
 
         AssertPageIsValid(trades, AssertTradeIsValid, false);
     }
@@ -74,7 +74,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
         var trades = await Client.GetHistoricalTradesAsync(
-            new HistoricalCryptoTradesRequest(Symbols, from, into));
+            new HistoricalCryptoTradesRequest(Symbols, from, into).WithPageSize(10));
 
         AssertPageIsValid(trades, AssertTradeIsValid, false);
     }
