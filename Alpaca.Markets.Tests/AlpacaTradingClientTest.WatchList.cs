@@ -51,7 +51,7 @@ public sealed partial class AlpacaTradingClientTest
         Assert.NotNull(updatedWatchList);
         Assert.Equal(updatedWatchListName, updatedWatchList.Name);
 
-        Assert.Equal(1, updatedWatchList.Assets.Count);
+        Assert.Single(updatedWatchList.Assets);
         Assert.Equal("IBM", updatedWatchList.Assets.Single().Symbol);
 
         Assert.True(await _alpacaTradingClient.DeleteWatchListByIdAsync(newWatchList.WatchListId));
