@@ -15,7 +15,7 @@
     <PackageReference Include="Alpaca.Markets" Version="7.0.0-rc3" />
     <PackageReference Include="Alpaca.Markets.Extensions" Version="7.0.0-rc1" />
     <PackageReference Include="IndexRange" Version="1.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
