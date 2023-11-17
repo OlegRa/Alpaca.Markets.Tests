@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="7.0.0" />
-    <PackageReference Include="Alpaca.Markets.Extensions" Version="7.0.0-rc1" />
+    <PackageReference Include="Alpaca.Markets.Extensions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
