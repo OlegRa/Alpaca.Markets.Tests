@@ -27,8 +27,7 @@ public sealed partial class AlpacaDataClientTest
         var from = into.AddDays(-3).Date;
 
         var count = 0;
-        var cancellationTokenSource = new CancellationTokenSource(
-            TimeSpan.FromSeconds(90));
+        var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(90));
         try
         {
             await foreach (var quote in Client.GetHistoricalQuotesAsAsyncEnumerable(
