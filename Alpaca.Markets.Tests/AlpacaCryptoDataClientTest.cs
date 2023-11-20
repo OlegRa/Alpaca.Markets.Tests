@@ -58,38 +58,12 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListHistoricalQuotesWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
-#pragma warning disable CS0618
-        var quotes = await Client.ListHistoricalQuotesAsync(
-            new HistoricalCryptoQuotesRequest(Symbol, from, into));
-#pragma warning restore CS0618
-
-        AssertPageIsValid(quotes, AssertQuoteIsValid, false);
-    }
-
-    [Fact]
-    public async void GetHistoricalQuotesWorks()
-    {
-        var into = (await GetLastTradingDayCloseTimeUtc()).Date;
-        var from = into.AddDays(-3).Date;
-#pragma warning disable CS0618
-        var quotes = await Client.GetHistoricalQuotesAsync(
-            new HistoricalCryptoQuotesRequest(Symbols, from, into));
-#pragma warning restore CS0618
-
-        AssertPageIsValid(quotes, AssertQuoteIsValid, false);
-    }
-
-    [Fact]
     public async void ListHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-1).Date;
         var trades = await Client.ListHistoricalTradesAsync(
-            new HistoricalCryptoTradesRequest(Symbol, from, into));
+            new HistoricalCryptoTradesRequest(Symbol, from, into).WithPageSize(10));
 
         AssertPageIsValid(trades, AssertTradeIsValid);
     }
@@ -100,7 +74,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-1).Date;
         var trades = await Client.GetHistoricalTradesAsync(
-            new HistoricalCryptoTradesRequest(Symbols, from, into));
+            new HistoricalCryptoTradesRequest(Symbols, from, into).WithPageSize(10));
 
         AssertPageIsValid(trades, AssertTradeIsValid);
     }

@@ -13,7 +13,7 @@ public sealed partial class AlpacaDataClientTest
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
         await foreach (var bar in Client.GetHistoricalBarsAsAsyncEnumerable(
-                           new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour)))
+            new HistoricalBarsRequest(Symbol, from, into, BarTimeFrame.Hour)))
         {
             Assert.NotNull(bar);
             Assert.InRange(bar.TimeUtc, from, into);
@@ -31,7 +31,7 @@ public sealed partial class AlpacaDataClientTest
         try
         {
             await foreach (var quote in Client.GetHistoricalQuotesAsAsyncEnumerable(
-                               new HistoricalQuotesRequest(Symbol, from, into), cancellationTokenSource.Token))
+                new HistoricalQuotesRequest(Symbol, from, into), cancellationTokenSource.Token))
             {
                 Assert.NotNull(quote);
                 Assert.InRange(quote.TimestampUtc, from, into);

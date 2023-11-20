@@ -59,20 +59,20 @@ public sealed partial class AlpacaCryptoStreamingClientTest
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(15));
 
-        var subscription = await client.SubscribeTradeAsync(Symbol);
+        var subscription = await client.SubscribeQuoteAsync(Symbol);
         await using (subscription.ConfigureAwait(false))
         {
-            var atLeastOneTradeReceived = false;
+            var atLeastOneQuoteReceived = false;
 
             await foreach (var _ in subscription
                                .AsAsyncEnumerable(cancellationTokenSource.Token)
                                .ConfigureAwait(false))
             {
-                atLeastOneTradeReceived = true;
+                atLeastOneQuoteReceived = true;
                 break;
             }
 
-            Assert.True(atLeastOneTradeReceived);
+            Assert.True(atLeastOneQuoteReceived);
         }
 
         await client.DisconnectAsync(CancellationToken.None);
