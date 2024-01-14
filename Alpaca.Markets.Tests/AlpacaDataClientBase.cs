@@ -1,35 +1,27 @@
 namespace Alpaca.Markets.Tests;
 
-public abstract class AlpacaDataClientBase<TClient> : IDisposable
+public abstract class AlpacaDataClientBase<TClient>(
+    IAlpacaTradingClient alpacaTradingClient,
+    TClient client,
+    params String[] symbols)
+    : IDisposable
     where TClient : IDisposable
 {
-    private readonly IAlpacaTradingClient _alpacaTradingClient;
+    protected readonly String[] Symbols = symbols;
 
-    protected readonly String[] Symbols;
-
-    protected readonly TClient Client;
-
-    protected AlpacaDataClientBase(
-        IAlpacaTradingClient alpacaTradingClient,
-        TClient client,
-        params String[] symbols)
-    {
-        _alpacaTradingClient = alpacaTradingClient;
-        Symbols = symbols;
-        Client = client;
-    }
+    protected readonly TClient Client = client;
 
     public void Dispose()
     {
         Client.Dispose();
-        _alpacaTradingClient.Dispose();
+        alpacaTradingClient.Dispose();
     }
 
     protected String Symbol => Symbols[0];
 
     protected async Task<DateTime> GetLastTradingDayCloseTimeUtc()
     {
-        var calendars = await _alpacaTradingClient
+        var calendars = await alpacaTradingClient
             .ListIntervalCalendarAsync(new CalendarRequest().WithInterval(
                 new Interval<DateOnly>(
                     DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-14)),
@@ -79,7 +71,7 @@ public abstract class AlpacaDataClientBase<TClient> : IDisposable
 
         foreach (var kvp in page.Items)
         {
-            Assert.All(kvp.Value, _ => assertItemIsValid(_, kvp.Key));
+            Assert.All(kvp.Value, item => assertItemIsValid(item, kvp.Key));
         }
     }
 

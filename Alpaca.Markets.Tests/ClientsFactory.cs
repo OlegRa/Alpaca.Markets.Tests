@@ -49,6 +49,4 @@ public sealed class PaperEnvironmentClientsFactoryFixture
 
 [CollectionDefinition(nameof(PaperEnvironmentClientsFactoryCollection))]
 public sealed class PaperEnvironmentClientsFactoryCollection
-    : ICollectionFixture<PaperEnvironmentClientsFactoryFixture>
-{
-}
+    : ICollectionFixture<PaperEnvironmentClientsFactoryFixture>;
