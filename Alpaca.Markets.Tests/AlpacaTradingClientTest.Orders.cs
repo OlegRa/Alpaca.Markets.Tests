@@ -5,26 +5,13 @@ public sealed partial class AlpacaTradingClientTest
     [Fact(Skip = "Not always work correctly")]
     public async void OrderPlaceCheckCancelWorks()
     {
-        using var sockClient = _clientsFactory.GetAlpacaStreamingClient();
-
-        static void HandleOnError(Exception ex)
-        {
-            Assert.Null(ex.Message);
-        }
+        using var sockClient = clientsFactory.GetAlpacaStreamingClient();
 
         sockClient.OnError += HandleOnError;
 
         await sockClient.ConnectAsync();
 
         var waitObject = new AutoResetEvent(false);
-
-        void HandleOnTradeUpdate(ITradeUpdate update)
-        {
-            Assert.NotNull(update);
-            Assert.NotNull(update.Order);
-            Assert.Equal(Symbol, update.Order.Symbol);
-            waitObject.Set();
-        }
 
         sockClient.OnTradeUpdate += HandleOnTradeUpdate;
 
@@ -61,5 +48,19 @@ public sealed partial class AlpacaTradingClientTest
         sockClient.OnError -= HandleOnError;
 
         await sockClient.DisconnectAsync();
+        return;
+
+        void HandleOnTradeUpdate(ITradeUpdate update)
+        {
+            Assert.NotNull(update);
+            Assert.NotNull(update.Order);
+            Assert.Equal(Symbol, update.Order.Symbol);
+            waitObject.Set();
+        }
+
+        static void HandleOnError(Exception ex)
+        {
+            Assert.Null(ex.Message);
+        }
     }
 }

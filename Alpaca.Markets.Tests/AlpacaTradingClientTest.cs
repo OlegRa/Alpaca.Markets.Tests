@@ -1,19 +1,12 @@
 ﻿namespace Alpaca.Markets.Tests;
 
 [Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
-public sealed partial class AlpacaTradingClientTest : IDisposable
+public sealed partial class AlpacaTradingClientTest(
+    PaperEnvironmentClientsFactoryFixture clientsFactory) : IDisposable
 {
     private const String Symbol = "AAPL";
 
-    private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
-
-    private readonly IAlpacaTradingClient _alpacaTradingClient;
-
-    public AlpacaTradingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory)
-    {
-        _clientsFactory = clientsFactory;
-        _alpacaTradingClient = clientsFactory.GetAlpacaTradingClient();
-    }
+    private readonly IAlpacaTradingClient _alpacaTradingClient = clientsFactory.GetAlpacaTradingClient();
 
     [Fact]
     public async void GetPortfolioHistoryAsyncWorks()

@@ -1,34 +1,19 @@
 ﻿namespace Alpaca.Markets.Tests;
 
 [Collection(nameof(PaperEnvironmentClientsFactoryCollection))]
-public sealed class AlpacaStreamingClientTest
+public sealed class AlpacaStreamingClientTest(
+    PaperEnvironmentClientsFactoryFixture clientsFactory)
 {
-    private readonly PaperEnvironmentClientsFactoryFixture _clientsFactory;
-
-    public AlpacaStreamingClientTest(PaperEnvironmentClientsFactoryFixture clientsFactory) => 
-        _clientsFactory = clientsFactory;
-
     [Fact]
     public async void ConnectWorks()
     {
-        using var client = _clientsFactory.GetAlpacaStreamingClient();
-
-        static void HandleOnError(Exception ex)
-        {
-            Assert.Null(ex.Message);
-        }
+        using var client = clientsFactory.GetAlpacaStreamingClient();
 
         client.OnError += HandleOnError;
 
         await client.ConnectAsync();
 
         var waitObject = new AutoResetEvent(false);
-
-        void HandleOnConnected(AuthStatus status)
-        {
-            Assert.Equal(AuthStatus.Authorized, status);
-            waitObject.Set();
-        }
 
         client.Connected += HandleOnConnected;
 
@@ -39,5 +24,17 @@ public sealed class AlpacaStreamingClientTest
         client.OnError -= HandleOnError;
 
         await client.DisconnectAsync();
+        return;
+
+        void HandleOnConnected(AuthStatus status)
+        {
+            Assert.Equal(AuthStatus.Authorized, status);
+            waitObject.Set();
+        }
+
+        static void HandleOnError(Exception ex)
+        {
+            Assert.Null(ex.Message);
+        }
     }
 }
