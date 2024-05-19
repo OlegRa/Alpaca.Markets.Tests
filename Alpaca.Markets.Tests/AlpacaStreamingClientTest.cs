@@ -5,7 +5,7 @@ public sealed class AlpacaStreamingClientTest(
     PaperEnvironmentClientsFactoryFixture clientsFactory)
 {
     [Fact]
-    public async void ConnectWorks()
+    public async Task ConnectWorks()
     {
         using var client = clientsFactory.GetAlpacaStreamingClient();
 
