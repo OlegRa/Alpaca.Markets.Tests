@@ -3,7 +3,7 @@
 public sealed partial class AlpacaTradingClientTest
 {
     [Fact(Skip = "Not always work correctly")]
-    public async void OrderPlaceCheckCancelWorks()
+    public async Task OrderPlaceCheckCancelWorks()
     {
         using var sockClient = clientsFactory.GetAlpacaStreamingClient();
 

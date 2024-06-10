@@ -9,7 +9,7 @@ public sealed partial class AlpacaTradingClientTest(
     private readonly IAlpacaTradingClient _alpacaTradingClient = clientsFactory.GetAlpacaTradingClient();
 
     [Fact]
-    public async void GetPortfolioHistoryAsyncWorks()
+    public async Task GetPortfolioHistoryAsyncWorks()
     {
         var portfolioHistory = await _alpacaTradingClient.GetPortfolioHistoryAsync(new PortfolioHistoryRequest());
 
@@ -30,7 +30,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void GetAssetAsyncThrowsCustomException()
+    public async Task GetAssetAsyncThrowsCustomException()
     {
         var exception = await Assert.ThrowsAsync<RestClientErrorException>(
             () => _alpacaTradingClient.GetAssetAsync("HEI-A"));
@@ -41,7 +41,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void GetAccountWorks()
+    public async Task GetAccountWorks()
     {
         var account = await _alpacaTradingClient.GetAccountAsync();
 
@@ -50,7 +50,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void GetAccountConfigurationWorks()
+    public async Task GetAccountConfigurationWorks()
     {
         var accountConfiguration = await _alpacaTradingClient.GetAccountConfigurationAsync();
 
@@ -59,7 +59,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void PatchAccountConfigurationWorks()
+    public async Task PatchAccountConfigurationWorks()
     {
         var accountConfigurationOld = await _alpacaTradingClient.GetAccountConfigurationAsync();
 
@@ -79,7 +79,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void ListOrdersWorks()
+    public async Task ListOrdersWorks()
     {
         var orders = await _alpacaTradingClient.ListOrdersAsync(new ListOrdersRequest());
 
@@ -88,7 +88,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact(Skip = "Temporary disabled due to problems with order requesting.")]
-    public async void GetOrderWorks()
+    public async Task GetOrderWorks()
     {
         var orders = await _alpacaTradingClient.ListOrdersAsync(
             new ListOrdersRequest { OrderStatusFilter = OrderStatusFilter.All });
@@ -111,7 +111,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void ListPositionsWorks()
+    public async Task ListPositionsWorks()
     {
         var positions = await _alpacaTradingClient.ListPositionsAsync();
 
@@ -120,7 +120,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void GetPositionWorks()
+    public async Task GetPositionWorks()
     {
         var position = await _alpacaTradingClient.GetPositionAsync(Symbol);
 
@@ -129,7 +129,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void ListAssetsWorks()
+    public async Task ListAssetsWorks()
     {
         var assets = await _alpacaTradingClient.ListAssetsAsync(
             new AssetsRequest { AssetClass = AssetClass.Crypto, AssetStatus = AssetStatus.Active});
@@ -139,7 +139,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void GetAssetWorks()
+    public async Task GetAssetWorks()
     {
         var asset = await _alpacaTradingClient.GetAssetAsync(Symbol);
 
@@ -152,7 +152,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void GetClockWorks()
+    public async Task GetClockWorks()
     {
         var clock = await _alpacaTradingClient.GetClockAsync();
 
@@ -162,7 +162,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact]
-    public async void ListCalendarWorks()
+    public async Task ListCalendarWorks()
     {
         var calendars = await _alpacaTradingClient.ListIntervalCalendarAsync(
             new CalendarRequest().WithInterval(
@@ -189,7 +189,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
 
     [Fact(Skip = "Run too long and sometimes fail")]
-    public async void AlpacaRestApiThrottlingWorks()
+    public async Task AlpacaRestApiThrottlingWorks()
     {
         var tasks = new Task[300];
         for (var i = 0; i < tasks.Length; ++i)
@@ -202,7 +202,7 @@ public sealed partial class AlpacaTradingClientTest(
     }
         
     [Fact]
-    public async void ListOrdersForDatesWorks()
+    public async Task ListOrdersForDatesWorks()
     {
         var orders = await _alpacaTradingClient.ListOrdersAsync(
             new ListOrdersRequest().WithInterval(

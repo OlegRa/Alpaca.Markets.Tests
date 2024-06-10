@@ -14,7 +14,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListDayHistoricalBarsWorks()
+    public async Task ListDayHistoricalBarsWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -25,7 +25,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListHourHistoricalBarsWorks()
+    public async Task ListHourHistoricalBarsWorks()
     {
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddHours(-5);
@@ -36,7 +36,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListMinuteHistoricalBarsWorks()
+    public async Task ListMinuteHistoricalBarsWorks()
     {
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddMinutes(-25);
@@ -47,7 +47,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void GetDayHistoricalBarsWorks()
+    public async Task GetDayHistoricalBarsWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -58,7 +58,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListHistoricalQuotesWorks()
+    public async Task ListHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
@@ -69,7 +69,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void GetHistoricalQuotesWorks()
+    public async Task GetHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
@@ -80,7 +80,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListHistoricalTradesWorks()
+    public async Task ListHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
@@ -91,7 +91,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void GetHistoricalTradesWorks()
+    public async Task GetHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-3).Date;
@@ -102,7 +102,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListLatestQuotesWorks()
+    public async Task ListLatestQuotesWorks()
     {
         foreach (var kvp in await Client
                      .ListLatestQuotesAsync(new LatestDataListRequest(Symbols)))
@@ -112,7 +112,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void ListLatestTradesWorks()
+    public async Task ListLatestTradesWorks()
     {
         foreach (var kvp in await Client
                      .ListLatestTradesAsync(new LatestDataListRequest(Symbols)))
@@ -122,12 +122,12 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void LatestDataListRequestValidationWorks() =>
+    public async Task LatestDataListRequestValidationWorks() =>
         await Assert.ThrowsAsync<RequestValidationException>(() => Client.ListLatestTradesAsync(
             new LatestDataListRequest(new []{ String.Empty })));
 
     [Fact]
-    public async void GetSnapshotWorks()
+    public async Task GetSnapshotWorks()
     {
         var snapshots = await Client.ListSnapshotsAsync(
             new SnapshotDataListRequest(Symbols));
@@ -141,7 +141,7 @@ public sealed partial class AlpacaCryptoDataClientTest : AlpacaDataClientBase<IA
     }
 
     [Fact]
-    public async void SnapshotDataListRequestValidationWorks() =>
+    public async Task SnapshotDataListRequestValidationWorks() =>
         await Assert.ThrowsAsync<RequestValidationException>(() => Client
             .ListSnapshotsAsync(new SnapshotDataListRequest(new []{ String.Empty })));
 

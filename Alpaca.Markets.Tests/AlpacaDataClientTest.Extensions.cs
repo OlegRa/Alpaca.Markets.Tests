@@ -8,7 +8,7 @@ namespace Alpaca.Markets.Tests;
 public sealed partial class AlpacaDataClientTest
 {
     [Fact]
-    public async void GetHistoricalBarsAsAsyncEnumerableWorks()
+    public async Task GetHistoricalBarsAsAsyncEnumerableWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -21,7 +21,7 @@ public sealed partial class AlpacaDataClientTest
     }
 
     [Fact]
-    public async void GetHistoricalQuotesAsAsyncEnumerableWorks()
+    public async Task GetHistoricalQuotesAsAsyncEnumerableWorks()
     {
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddDays(-3).Date;

@@ -14,7 +14,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void ListDayHistoricalBarsWorks()
+    public async Task ListDayHistoricalBarsWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -25,7 +25,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void ListHourHistoricalBarsWorks()
+    public async Task ListHourHistoricalBarsWorks()
     {
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddHours(-5);
@@ -36,7 +36,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void ListMinuteHistoricalBarsWorks()
+    public async Task ListMinuteHistoricalBarsWorks()
     {
         var into = await GetLastTradingDayCloseTimeUtc();
         var from = into.AddMinutes(-25);
@@ -47,7 +47,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void GetDayHistoricalBarsWorks()
+    public async Task GetDayHistoricalBarsWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -58,7 +58,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void ListHistoricalQuotesWorks()
+    public async Task ListHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -69,7 +69,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void GetHistoricalQuotesWorks()
+    public async Task GetHistoricalQuotesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -80,7 +80,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void ListHistoricalTradesWorks()
+    public async Task ListHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -91,7 +91,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void GetHistoricalTradesWorks()
+    public async Task GetHistoricalTradesWorks()
     {
         var into = (await GetLastTradingDayCloseTimeUtc()).Date;
         var from = into.AddDays(-5).Date;
@@ -102,15 +102,15 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void GetLatestQuoteWorks() =>
+    public async Task GetLatestQuoteWorks() =>
         AssertQuoteIsValid(await Client.GetLatestQuoteAsync(new LatestMarketDataRequest(Symbol)));
 
     [Fact]
-    public async void GetLatestTradeWorks() =>
+    public async Task GetLatestTradeWorks() =>
         AssertTradeIsValid(await Client.GetLatestTradeAsync(new LatestMarketDataRequest(Symbol)));
 
     [Fact]
-    public async void GetSnapshotWorks()
+    public async Task GetSnapshotWorks()
     {
         var snapshot = await Client.GetSnapshotAsync(new LatestMarketDataRequest(Symbol));
 
@@ -121,7 +121,7 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void GetSnapshotsWorks()
+    public async Task GetSnapshotsWorks()
     {
         var snapshotsDictionary = await Client.ListSnapshotsAsync(new LatestMarketDataListRequest(Symbols));
 
@@ -135,15 +135,15 @@ public sealed partial class AlpacaDataClientTest : AlpacaDataClientBase<IAlpacaD
     }
 
     [Fact]
-    public async void ListExchangesWorks() => 
+    public async Task ListExchangesWorks() => 
         assertStringDictionaryIsValid(await Client.ListExchangesAsync());
 
     [Fact]
-    public async void ListTradeConditionsWorks() => 
+    public async Task ListTradeConditionsWorks() => 
         assertStringDictionaryIsValid(await Client.ListTradeConditionsAsync(Tape.A));
 
     [Fact]
-    public async void ListQuoteConditionsWorks() => 
+    public async Task ListQuoteConditionsWorks() => 
         assertStringDictionaryIsValid(await Client.ListQuoteConditionsAsync(Tape.C));
 
     private void assertSnapshotIsValid(ISnapshot snapshot, String symbol)

@@ -3,7 +3,7 @@
 public sealed partial class AlpacaTradingClientTest
 {
     [Fact]
-    public async void AllOperationsByIdWork()
+    public async Task AllOperationsByIdWork()
     {
         var originalWatchListsList = await _alpacaTradingClient.ListWatchListsAsync();
 
@@ -58,7 +58,7 @@ public sealed partial class AlpacaTradingClientTest
     }
 
     [Fact]
-    public async void AllOperationsByNameWork()
+    public async Task AllOperationsByNameWork()
     {
         var originalWatchListsList = await _alpacaTradingClient.ListWatchListsAsync();
 
@@ -102,22 +102,22 @@ public sealed partial class AlpacaTradingClientTest
     }
 
     [Fact]
-    public async void UpdateWatchListRequestNameValidationWorks() =>
+    public async Task UpdateWatchListRequestNameValidationWorks() =>
         await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.UpdateWatchListByIdAsync(
             new UpdateWatchListRequest(Guid.NewGuid(), String.Empty, Array.Empty<String>())));
 
     [Fact]
-    public async void UpdateWatchListRequestSymbolsValidationWorks() =>
+    public async Task UpdateWatchListRequestSymbolsValidationWorks() =>
         await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.UpdateWatchListByIdAsync(
             new UpdateWatchListRequest(Guid.NewGuid(), Guid.NewGuid().ToString("N"), new []{ String.Empty})));
 
     [Fact]
-    public async void ChangeWatchListRequestNameValidationWorks() =>
+    public async Task ChangeWatchListRequestNameValidationWorks() =>
         await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.AddAssetIntoWatchListByNameAsync(
             new ChangeWatchListRequest<String>(String.Empty, "AAPL")));
 
     [Fact]
-    public async void ChangeWatchListRequestSymbolsValidationWorks() =>
+    public async Task ChangeWatchListRequestSymbolsValidationWorks() =>
         await Assert.ThrowsAsync<RequestValidationException>(() => _alpacaTradingClient.AddAssetIntoWatchListByIdAsync(
             new ChangeWatchListRequest<Guid>(Guid.NewGuid(), String.Empty)));
 }
